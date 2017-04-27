@@ -43,6 +43,6 @@ in Modeler: OD_LWPasteFromExternal & OD_LWCopyToExternal
 
 Add them to the menus as you please.
 
-Steve White has provided <a href="http://www.youtube.com/watch?feature=player_embedded&v=YOUTUBE_VIDEO_ID_HERE
-" target="_blank"><img src="http://img.youtube.com/vi/YOUTUBE_VIDEO_ID_HERE/0.jpg"
-alt="IMAGE ALT TEXT HERE" width="240" height="180" border="10" />Youtube Video</a>here showing the use between Modo and Lightwave.
+Steve White has provided <a href="http://www.youtube.com/watch?feature=player_embedded&v=6jKi34irylo
+" target="_blank"><img src="http://img.youtube.com/vi/6jKi34irylo/0.jpg"
+alt="IMAGE ALT TEXT HERE" width="240" height="180" border="10" /></a>a Youtube Video here showing the use between Modo and Lightwave.
