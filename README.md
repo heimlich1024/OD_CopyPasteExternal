@@ -8,6 +8,11 @@ multiple applications, this becomes extremely beneficial.  I opensourced it, in 
 people willing to contributes, in applications that I have either a) not touched, or b) have not as much experience
 in to make this even better than it already is.  So if you are willing to contribute, please get in touch with me
 
+# Help ?
+
+If you want to help and contribute, please get in touch with me.  There's XSI, Cinema4D and 3dsMax that still need
+to be done, as well as the Houdini Exporter.  So anyone with experience in the SDK on those apps, please take a look.
+
 # General Information:
 
 - Copy To External: will copy the current mesh into memory
@@ -31,6 +36,7 @@ Cinema4D  : None (looking for people to contribute)
 
 XSI		    : None (looking for people to contribute)
 
+# Installs:
 
 ### MODO Install:
 
@@ -47,8 +53,18 @@ Add the LW_CopyPasteExternal.py via add plugins. 3 Plugins should be added:
 
 in Layout: OD_LayoutPasteFromExternal
 in Modeler: OD_LWPasteFromExternal & OD_LWCopyToExternal
-
 Add them to the menus as you please.
+
+### Maya Install
+
+Just install the two scripts as any other plugin.
+
+### Blender Install
+
+Preferences/Addons/Install from File and select the files and click the checkbox.
+The plugins are then found under the object menu.
+
+# Tutorials & Videos
 
 Steve White has provided a Youtube Video here showing the use between Modo and Lightwave.
 
