@@ -2,7 +2,7 @@ bl_info = {
     "name": "Paste From External",
     "version": (1, 0),
     "author": "Oliver Hotz",
-    "description": "Paste from an external Object of other applications/instances to a current mesh",
+    "description": "Paste from an external Object of other applications / instances to a current mesh",
     "category": "Object"
 }
 

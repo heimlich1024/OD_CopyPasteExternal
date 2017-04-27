@@ -2,7 +2,7 @@ bl_info = {
     "name": "Copy To External",
     "version": (1, 0),
     "author": "Oliver Hotz",
-    "description": "Copies current object to clipboard for use in other applications/instances",
+    "description": "Copies current object to clipboard for use in other applications / instances",
     "category": "Object"
 }
 
@@ -14,7 +14,6 @@ class CopyToExternal(bpy.types.Operator):
     bl_idname = "object.copy_to_external"
     bl_label = "Copy To External"
     bl_options = {'REGISTER', 'UNDO'}
-
 
     def execute(self, context):
 
@@ -62,8 +61,7 @@ class CopyToExternal(bpy.types.Operator):
                 ppoint = ""
                 for idx in poly.vertices:
                     ppoint += "," + str(obj.data.vertices[idx].index)
-                polytype = "FACE"
-                f.write(ppoint[1:] + ";;" + str(surf) + ";;" + polytype +"\n")
+                f.write(ppoint[1:] + ";;" + str(surf) + "\n")
 
             #write all weights
             result1, result2 = mesh_to_weight_list(obj, mesh)
