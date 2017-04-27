@@ -34,7 +34,7 @@ OD_CopyToExternal & OD_PasteFromExternal
 
 You can map them into your menu or hotkeys via the forms/input editor.
 
-### LIGHTWAVE Install:
+### LIGHTWAVE Install (2015+):
 
 Add the LW_CopyPasteExternal.py via add plugins. 3 Plugins should be added:
 
