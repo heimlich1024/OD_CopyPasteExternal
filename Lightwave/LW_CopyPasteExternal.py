@@ -66,6 +66,10 @@ class OD_LWCopyToExternal(lwsdk.ICommandSequence):
       point_count = len(points)
       edit_op_result = lwsdk.EDERR_NONE
 
+      #if there's no points, then we dont need to do anything
+      if point_count == 0:
+        return lwsdk.AFUNC_OK
+
       polys = []
       edit_op_result = mesh_edit_op.fastPolyScan(mesh_edit_op.state, self.fast_point_scan, (polys,), lwsdk.OPLYR_FG, 0)
       if edit_op_result != lwsdk.EDERR_NONE:
