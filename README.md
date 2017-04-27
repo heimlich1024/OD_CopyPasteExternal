@@ -6,7 +6,11 @@ Easily copying and pasting of geometry between 3D Applications
 Because quite frankly nothing thats this easy exists.  And if you are like me working in environments using
 multiple applications, this becomes extremely beneficial.  I opensourced it, in the hope, that there are other
 people willing to contributes, in applications that I have either a) not touched, or b) have not as much experience
-in to make this even better than it already is.  So if you are willing to contribute, please get in touch with me
+in to make this even better than it already is.  So if you are willing to contribute, please get in touch with me.
+
+Currently, it uses an always existing temporary directory to store the intermediate custom file on the local machine,
+but of course that directory can be changed to live on a dropbox (for online internet sharing with friends), or on a
+network server for inter company sharing.  Those are really just some of the possibilies.
 
 # Help ?
 
