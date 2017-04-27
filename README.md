@@ -9,13 +9,21 @@ General Information:
 The following applications are supported:
 
 Modo      : Vertices / Polygons (incl. Subpatch and SubD)/ WeightMaps / UVMaps / MorphMaps
+
 Lightwave : Vertices / Polygons (incl. Subpatch and SubD)/ WeightMaps / UVMaps / MorphMaps
+
 Blender   : Vertices / Polygons (incl. Subpatch and SubD)/ WeightMaps / UVMaps / MorphMaps
+
 Maya      : Vertices / Polygons / Weights (via Vertex Normals)
+
 Houdini   : Vertices / Polygons / Weightmaps, UVMaps
+
 Cinema4D  : None (looking for people to contribute)
+
 3dsMax    : None (looking for people to contribute)
+
 XSI		    : None (looking for people to contribute)
+
 
 MODO Install:
 
