@@ -1,6 +1,13 @@
 # OD_CopyPasteExternal
 Easily copying and pasting of geometry between 3D Applications
 
+# Why ?
+
+Because quite frankly nothing thats this easy exists.  And if you are like me working in environments using
+multiple applications, this becomes extremely beneficial.  I opensourced it, in the hope, that there are other
+people willing to contributes, in applications that I have either a) not touched, or b) have not as much experience
+in to make this even better than it already is.  So if you are willing to contribute, please get in touch with me
+
 # General Information:
 
 - Copy To External: will copy the current mesh into memory
