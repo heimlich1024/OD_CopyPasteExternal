@@ -32,7 +32,7 @@ Blender   : Vertices / Polygons (incl. Subpatch and SubD)/ WeightMaps / UVMaps /
 
 Maya      : Vertices / Polygons / Weights (via Vertex Normals)
 
-Houdini   : Vertices / Polygons / Weightmaps, UVMaps
+Houdini   : Vertices / Polygons / Weightmaps, UVMaps (Currently only pasting / need help in copying)
 
 Cinema4D  : None (looking for people to contribute)
 
