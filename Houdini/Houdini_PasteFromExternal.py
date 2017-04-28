@@ -7,7 +7,7 @@ def openMaster(filepath):    #Opens a file and puts every line of the file in a 
     lines = [i for i in masterOpen.readlines()]
     masterOpen.close()
     return lines
-filePath = tempfile.gettempdir() + os.sep + "ODVertexData.txt" #this is the temp file where everything is stored
+filePath = tempfile.gettempdir() + os.sep + ".." + os.sep + "ODVertexData.txt" #this is the temp file where everything is stored
 #print filePath
 exchFile = openMaster(filePath) #Makes list of every line in file
 pointLength = exchFile[0]
@@ -37,7 +37,9 @@ surfList = []
 for item in range(1 + int(polyLine), 1 + int(polyLine) + int(polyCount)):#this is where we look through the list for surface names
     f = exchFile[item]
     f = f.strip()
-    points, sep, PolyName = f.partition(";;")
+    f = f.split(";;")
+    points = f[0]
+    PolyName = f[1]
     if PolyName not in surfList:
         surfList.append(PolyName)
 for surf in surfList:
@@ -59,7 +61,9 @@ for item in range(1, 1 + int(pointLength)): #makes points
 for item in range(1 + int(polyLine), 1 + int(polyLine) + int(polyCount)): #makes Polys
     f = exchFile[item]
     f = f.strip()
-    points, sep, PolyName = f.partition(";;")
+    f = f.split(";;")
+    points = f[0]
+    PolyName = f[1]
     polyPoints = []
     while True: #gets vertex for each poly
         if "," in points:
