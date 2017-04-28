@@ -23,15 +23,18 @@ if len(geo.points()) > 0:
     polyPrims = [prim for prim in geo.prims() if prim.type() == hou.primType.Polygon]
 
     uvs = []
+    check = geo.findVertexAttrib("uv")
     f.write("POLYGONS:"+str(len(polyPrims)) + "\\n")
     count = 0
     for (fid, prim) in enumerate(polyPrims):
         ppoint = ""
         for point in prim.vertices():
              ppoint += "," + str(geo.points().index(hou.Vertex.point(point)))
-             uvs.append(str(point.attribValue("uv")[0]) + " " + str(point.attribValue("uv")[1]) + ":PLY:" + str(count) + ":PNT:" + str(geo.points().index(hou.Vertex.point(point))) + "\\n")
+             if check != None:
+                uvs.append(str(point.attribValue("uv")[0]) + " " + str(point.attribValue("uv")[1]) + ":PLY:" + str(count) + ":PNT:" + str(geo.points().index(hou.Vertex.point(point))) + "\\n")
         surf = "Default"
         polytype = "FACE"
+        #print ppoint
         f.write(ppoint[1:] + ";;" + surf + ";;" + polytype + "\\n")
         count += 1
 
