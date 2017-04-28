@@ -70,10 +70,10 @@ The plugins are then found under the object menu.
 
 ### Houdini Install (tested 15 and higher)
 
-Start Houdini and open the Python SourceScript editor.  Copy/paste the contents
-of the python file into that editor and apply the script.  It will create a new geo
-node that has a python file attached and should paste the object.  Currently only
-paste is working.
+Start Houdini and Right Click on an empty space in the shelf and select New Tool.
+Then go to the Scrips Tab and paste the contents of the python file there.  In the
+options tab, you can name the tools, click apply and accept, and you are good to go.
+
 
 # Tutorials & Videos
 
