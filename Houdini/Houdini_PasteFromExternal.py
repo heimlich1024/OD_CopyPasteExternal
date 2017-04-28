@@ -86,5 +86,6 @@ for item in range(1 + int(polyLine), 1 + int(polyLine) + int(polyCount)): #makes
         vtx_num = poly.addVertex(realPoints[int(p)])#adds vertex to position Poly
         vtx_num.setAttribValue(attrUV, (float(u), float(v), 1.0))#Adds UV attribute info
         miniCount += 1
-    startLine += len(polyPoints)
+    if startLine != "NoUV":
+        startLine += len(polyPoints)
  '''})
