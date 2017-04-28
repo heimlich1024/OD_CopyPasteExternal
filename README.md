@@ -49,7 +49,7 @@ Upon Modo start/restart you now have two additional commands:
 
 OD_CopyToExternal & OD_PasteFromExternal
 
-You can map them into your menu or hotkeys via the forms/input editor.
+You'll see a Scissors Icon in your Tailbar which includes those commands.
 
 ### LIGHTWAVE Install (2015+):
 
@@ -67,6 +67,13 @@ Just install the two scripts as any other plugin.
 
 Preferences/Addons/Install from File and select the files and click the checkbox.
 The plugins are then found under the object menu.
+
+### Houdini Install
+
+Start Houdini and open the Python SourceScript editor.  Copy/paste the contents
+of the python file into that editor and apply the script.  It will create a new geo
+node that has a python file attached and should paste the object.  Currently only
+paste is working.
 
 # Tutorials & Videos
 
