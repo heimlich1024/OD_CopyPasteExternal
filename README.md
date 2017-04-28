@@ -40,9 +40,9 @@ Cinema4D  : None (looking for people to contribute)
 
 XSI		    : None (looking for people to contribute)
 
-# Installs:
+# Installation:
 
-### MODO Install:
+### MODO Install (tested 10.01 and higher):
 
 Drag the OD_ModoCopyPasteExternal folder into your kits folder.
 Upon Modo start/restart you now have two additional commands:
@@ -63,12 +63,12 @@ Add them to the menus as you please.
 
 Just install the two scripts as any other plugin.
 
-### Blender Install
+### Blender Install (tested 2.78c)
 
 Preferences/Addons/Install from File and select the files and click the checkbox.
 The plugins are then found under the object menu.
 
-### Houdini Install
+### Houdini Install (tested 15 and higher)
 
 Start Houdini and open the Python SourceScript editor.  Copy/paste the contents
 of the python file into that editor and apply the script.  It will create a new geo
