@@ -19,26 +19,19 @@ to be done, as well as the Houdini Exporter.  So anyone with experience in the S
 
 # General Information:
 
-- Copy To External: will copy the current mesh into memory
-- Paste From External: will rebuild the geometry thats in memory
+* Copy To External: will copy the current mesh into memory
+* Paste From External: will rebuild the geometry thats in memory
 
 The following applications are supported:
 
-Modo      : Vertices / Polygons (incl. Subpatch and SubD)/ WeightMaps / UVMaps / MorphMaps
-
-Lightwave : Vertices / Polygons (incl. Subpatch and SubD)/ WeightMaps / UVMaps / MorphMaps
-
-Blender   : Vertices / Polygons (incl. Subpatch and SubD)/ WeightMaps / UVMaps / MorphMaps
-
-Maya      : Vertices / Polygons / Weights (via Vertex Normals)
-
-Houdini   : Vertices / Polygons / Weightmaps, UVMaps (Currently only pasting / need help in copying)
-
-Cinema4D  : None (looking for people to contribute)
-
-3dsMax    : None (looking for people to contribute)
-
-XSI		  : None (looking for people to contribute)
+* Modo      : Vertices / Polygons (incl. Subpatch and SubD)/ WeightMaps / UVMaps / MorphMaps
+* Lightwave : Vertices / Polygons (incl. Subpatch and SubD)/ WeightMaps / UVMaps / MorphMaps
+* Blender   : Vertices / Polygons (incl. Subpatch and SubD)/ WeightMaps / UVMaps / MorphMaps
+* Maya      : Vertices / Polygons / Weights (via Vertex Normals)
+              Implementation by Andre Hotz
+* Houdini   : Vertices / Polygons / Weightmaps, UVMaps (Currently only pasting / need help in copying)
+			  Paste Implementation by Chris Wells
+* Others	: Looking for contributors to write implementations for other 3d Apps (see TODO)
 
 # Installation:
 
