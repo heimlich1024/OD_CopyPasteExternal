@@ -27,10 +27,8 @@ The following applications are supported:
 * Modo      : Vertices / Polygons (incl. Subpatch and SubD)/ WeightMaps / UVMaps / MorphMaps
 * Lightwave : Vertices / Polygons (incl. Subpatch and SubD)/ WeightMaps / UVMaps / MorphMaps
 * Blender   : Vertices / Polygons (incl. Subpatch and SubD)/ WeightMaps / UVMaps / MorphMaps
-* Maya      : Vertices / Polygons / Weights (via Vertex Normals)
-              Implementation by Andre Hotz
-* Houdini   : Vertices / Polygons / Weightmaps, UVMaps (Currently only pasting / need help in copying)
-			  Paste Implementation by Chris Wells
+* Maya      : Vertices / Polygons / Weights (via Vertex Normals) (Implementation by Andre Hotz)
+* Houdini   : Vertices / Polygons / Weightmaps, UVMaps (Paste Implementation by Chris Wells)
 * Others	: Looking for contributors to write implementations for other 3d Apps (see TODO)
 
 # Installation:
