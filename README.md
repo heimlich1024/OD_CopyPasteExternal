@@ -85,12 +85,11 @@ alt="LW-Modo Usage" width="240" height="180" border="10" /></a>
 
 # TODO:
 
-Houdini:  figure out how to get Morphs/Blendshapes integrated
-Maya:     figure out how to get Morphs/Blendshapes integrated
-Cinema4d: Implementation
-3DsMax:   Implementation
-XSI:	  Implementation
-Sketchup: Implementation
-Unreal:   R&D to see if its possible to implement
-Unity:    R&D to see if its possible to implement
-
+* Houdini:  figure out how to get Morphs/Blendshapes integrated
+* Maya:     figure out how to get Morphs/Blendshapes integrated
+* Cinema4d: Implementation
+* 3DsMax:   Implementation
+* XSI:	    Implementation
+* Sketchup: Implementation
+* Unreal:   R&D to see if its possible to implement
+* Unity:    R&D to see if its possible to implement
