@@ -59,9 +59,15 @@ if len(geo.points()) > 0:
     f.close()
     '''})
 
-hou.node('obj/'+sel+'/ExportScript/').setInput(0, hou.node(selPath))
+hou.node('obj/'+sel).createNode("convert", "ODConvertToPolygon" )
+hou.node('obj/'+sel+'/ODConvertToPolygon/').setInput(0, hou.node(selPath))
+hou.node('obj/'+sel+'/ExportScript/').setInput(0, hou.node('obj/'+sel+'/ODConvertToPolygon/'))
+
+
+#hou.node('obj/'+sel+'/ExportScript/').setInput(0, hou.node(selPath))
 hou.node('obj/'+sel+'/ExportScript/').setDisplayFlag(True)
 hou.node('obj/'+sel+'/ExportScript/').setRenderFlag(True)
 hou.node('obj/'+sel+'/ExportScript/').setCurrent(1, False)
 hou.node('obj/'+sel+'/ExportScript/').cook(force=True, frame_range=(int(hou.frame()),int(hou.frame())))
 hou.node('obj/'+sel+'/ExportScript/').destroy()
+hou.node('obj/'+sel+'/ODConvertToPolygon/').destroy()
