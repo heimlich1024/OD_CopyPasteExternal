@@ -19,7 +19,7 @@ if len(geo.points()) > 0:
     f.write("VERTICES:"+str(len(geo.points())) + "\\n")
     for point in geo.points():
         pos = point.position()
-        f.write(str(pos[0]) + " " + str(pos[1]) + " " + str(pos[2]*-1) + "\\n")
+        f.write(str(pos[0]) + " " + str(pos[1]) + " " + str(pos[2]) + "\\n")
     polyPrims = [prim for prim in geo.prims() if prim.type() == hou.primType.Polygon]
 
     uvs = []
