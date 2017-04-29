@@ -40,12 +40,13 @@ class OD_PasteFromExternal(lxu.command.BasicCommand):
         lines = f.readlines()
         f.close()
 
-        pntCount = int(lines[0].split(":")[1].strip())
-
-        uvMaps = []; morphMaps = []; weightMaps = []; count = 0
-
-        #Check if the file has uv's, morphs, or weights
+        vertline = []; polyline = []; uvMaps = []; morphMaps = []; weightMaps = []; count = 0
+        #Parse File to see what Data we have
         for line in lines:
+          if line.startswith("VERTICES:"):
+            vertline.append([int(line.strip().split(":")[1].strip()), count])
+          if line.startswith("POLYGONS:"):
+            polyline.append([int(line.strip().split(":")[1].strip()), count])
           if line.startswith("UV:"):
             uvMaps.append([line.strip().split(":")[1:], count])  # changed this to add the # of uv coordinates into the mix
           if line.startswith("MORPH"):
@@ -69,17 +70,10 @@ class OD_PasteFromExternal(lxu.command.BasicCommand):
 
         #generate points
         points = []
-        for i in range(pntCount):
-          points.append(geo.vertices.new((float(lines[i+1].split(" ")[0]), float(lines[i+1].split(" ")[1]), float(lines[i+1].split(" ")[2]) * 1)))
-
-        #get the lines responsible for the Polygon assignment
-        lcount = 0
-        for line in lines:
-          if line.startswith("POLYGONS:"):
-            break
-          lcount += 1
-        polycount = lines[lcount].split(":")[1]
-        count = 0
+        for i in xrange(verts[1] + 1, verts[1] + verts[0] + 1):
+          x = lines[i].split(" ")
+          pt = [ float(x[0]), float(x[1]), float(x[2].strip()) ]
+          points.append(geo.vertices.new((float(x[0])), float(x[1]), float(x[2].strip())))
 
         #Query Existing Materials
         allsurfaces = []
@@ -87,23 +81,24 @@ class OD_PasteFromExternal(lxu.command.BasicCommand):
           allsurfaces.append(material.name)
 
         #generate Polys from the Points and assign materials
-        for i in xrange(len(points)+2, len(points)+2+int(polycount)):
-          pts = []
-          surf = (lines[i].split(";;")[1]).strip()
-          ptch = (lines[i].split(";;")[2]).strip()
-          if surf not in allsurfaces:
-            allsurfaces.append(surf)
-            scene.addMaterial(name=surf)
-          for x in (lines[i].split(";;")[0]).strip().split(","):
-            pts.append(int(x.strip()))
-          ptype = lx.symbol.iPTYP_FACE
-          if ptch == "CCSS":
-            ptype = lx.symbol.iPTYP_PSUB
-          elif ptch == "SUBD":
-            ptype = lx.symbol.iPTYP_SUBD
-          geo.polygons.new(vertices=(pts), reversed=False, polyType=ptype)
-          geo.polygons[count].materialTag = surf
-          count += 1
+        for polygons in polyline:
+          polys = []
+          count = 0
+          for i in xrange(polygons[1] + 1, polygons[1] + polygons[0] + 1):
+            pts = []
+            surf = (lines[i].split(";;")[1]).strip()
+            ptch = (lines[i].split(";;")[2]).strip()
+            if surf not in allsurfaces:
+              allsurfaces.append(surf)
+              scene.addMaterial(name=surf)
+            for x in (lines[i].split(";;")[0]).strip().split(","):
+              pts.append(int(x.strip()))
+            ptype = lx.symbol.iPTYP_FACE
+            if ptch == "CCSS": ptype = lx.symbol.iPTYP_PSUB
+            elif ptch == "SUBD": ptype = lx.symbol.iPTYP_SUBD
+            geo.polygons.new(vertices=(pts), reversed=False, polyType=ptype)
+            geo.polygons[count].materialTag = surf
+            count += 1
 
         #Apply Weights
         for weightMap in weightMaps:
