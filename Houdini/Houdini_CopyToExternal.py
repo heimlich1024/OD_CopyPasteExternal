@@ -1,8 +1,12 @@
 selnode = hou.selectedNodes()
 for node in hou.selectedNodes():
     selPath = node.path()
-
 sel = selPath.split("/")[-2]
+
+scale = 1  #somehow, normal meshes, that werent transfered need to have their z axis inverted otherwise they show flipped
+for node in hou.node('obj/'+sel).children():
+    if "ImportScript" in node.name(): scale = 1
+    else: scale = -1
 
 hou.node('obj/'+sel).createNode("python", "ExportScript" )
 hou.node('obj/'+sel+'/ExportScript/').setParms({"python": '''
@@ -19,7 +23,7 @@ if len(geo.points()) > 0:
     f.write("VERTICES:"+str(len(geo.points())) + "\\n")
     for point in geo.points():
         pos = point.position()
-        f.write(str(pos[0]) + " " + str(pos[1]) + " " + str(pos[2]) + "\\n")
+        f.write(str(pos[0]) + " " + str(pos[1]) + " " + str(pos[2]*'''+str(scale)+''') + "\\n")
     polyPrims = [prim for prim in geo.prims() if prim.type() == hou.primType.Polygon]
 
     uvs = []
