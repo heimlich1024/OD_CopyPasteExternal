@@ -16,7 +16,6 @@ class PasteFromExternal(bpy.types.Operator):
     bl_label = "Paste From External"
     bl_options = {'REGISTER', 'UNDO'}
 
-
     def execute(self, context):
 
         def OD_PasteFromExternal(_name, size):
@@ -30,37 +29,48 @@ class PasteFromExternal(bpy.types.Operator):
             else:
                 print("Cannot find file")
 
-            pntCount = int(lines[0].split(":")[1].strip())
-
-            verts = []
-            for i in range(0, pntCount):
-              x = lines[i+1].split(" ")
-              pt = [ float(x[0].strip()), float(x[2].strip()), float(x[1].strip()) ]
-              verts.append(pt)
-
-            lcount = 0
-            for line in lines:
-              if line.startswith("POLYGONS:"):
-                break
-              lcount += 1
-            polycount = lines[lcount].split(":")[1]
-            faces = []
-            allMats = []
-            facesMat = []
-            for i in range(pntCount+2, pntCount+2+int(polycount)):
-              pts = []
-              surf = (lines[i].split(";;")[1]).strip()
-              for x in (lines[i].split(";;")[0]).strip().split(","):
-                pts.append(int(x.strip()))
-              faces.append(pts)
-              facesMat.append(surf)
-              if surf not in allMats:
-                allMats.append(surf)
-
-
-            uvMaps = []
-            morphMaps = []
+            vertline   = []
+            polyline   = []
+            uvMaps     = []
+            morphMaps  = []
             weightMaps = []
+            count      = 0
+            #Parse File to see what Data we have
+            for line in lines:
+              if line.startswith("VERTICES:"):
+                vertline.append([int(line.strip().split(":")[1].strip()), count])
+              if line.startswith("POLYGONS:"):
+                polyline.append([int(line.strip().split(":")[1].strip()), count])
+              if line.startswith("UV:"):
+                uvMaps.append([line.strip().split(":")[1:], count])  # changed this to add the # of uv coordinates into the mix
+              if line.startswith("MORPH"):
+                morphMaps.append([line.split(":")[1].strip(), count])
+              if line.startswith("WEIGHT"):
+                weightMaps.append([line.split(":")[1].strip(), count])
+              count += 1
+
+            #create Points
+            for v in vertline:
+              verts = []
+              for i in range(v[1] + 1, v[1] + v[0] + 1):
+                x = lines[i].split(" ")
+                pt = [ float(x[0].strip()), float(x[2].strip()), float(x[1].strip()) ]
+                verts.append(pt)
+
+            for polygons in polyline:
+              faces = []
+              allMats = []
+              facesMat = []
+              for i in range(polygons[1] + 1, polygons[1] + polygons[0] + 1):
+                pts = []
+                surf = (lines[i].split(";;")[1]).strip()
+                for x in (lines[i].split(";;")[0]).strip().split(","):
+                  pts.append(int(x.strip()))
+                faces.append(pts)
+                facesMat.append(surf)
+                if surf not in allMats:
+                  allMats.append(surf)
+
             count = 0
             for line in lines:
               if line.startswith("UV:"):
