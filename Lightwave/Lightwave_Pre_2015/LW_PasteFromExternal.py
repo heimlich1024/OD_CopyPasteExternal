@@ -9,7 +9,7 @@ __version__    = "1.0"
 __maintainer__ = "Oliver Hotz"
 __email__      = "oliver@origamidigital.com"
 __status__     = "Copies / Pastes Objects between various 3d applications"
-__lwver__      = "9.6"
+__lwver__      = "11"
 
 try:
   import lwsdk, os, tempfile, sys
@@ -70,38 +70,18 @@ class OD_LWPasteFromExternal(lwsdk.ICommandSequence):
       return lwsdk.AFUNC_OK
 
     try:
-      #create Points
-      points = []
-      for i in xrange(1, pntCount + 1):
-        x = lines[i].split(" ")
-        pt = [ float(x[0]), float(x[1]), float(x[2].strip()) ]
-        #print pt[0]
-        points.append(mesh_edit_op.addPoint(mesh_edit_op.state, pt))
-      lcount = 0
-      for line in lines:
-        if line.startswith("POLYGONS:"):
-          break
-        lcount += 1
-      polycount = lines[lcount].split(":")[1]
-      polys = []
-      for i in xrange(len(points)+2, len(points)+2+int(polycount)):
-        pts = []
-        surf = (lines[i].split(";;")[1]).strip()
-        polytype = (lines[i].split(";;")[2]).strip()
-        for x in (lines[i].split(";;")[0]).strip().split(","):
-          pts.append(points[int(x.strip())])
-        ptype = lwsdk.LWPOLTYPE_FACE
-        if polytype == "CCSS":
-          ptype = lwsdk.LWPOLTYPE_SUBD
-        elif polytype == "SUBD":
-          ptype = lwsdk.LWPOLTYPE_PTCH
-        polys.append(mesh_edit_op.addPoly(mesh_edit_op.state, ptype, None, surf, pts))
-
-      uvMaps = []
-      morphMaps = []
+      vertline   = []
+      polyline   = []
+      uvMaps     = []
+      morphMaps  = []
       weightMaps = []
-      count = 0
+      count      = 0
+      #Parse File to see what Data we have
       for line in lines:
+        if line.startswith("VERTICES:"):
+          vertline.append([int(line.strip().split(":")[1].strip()), count])
+        if line.startswith("POLYGONS:"):
+          polyline.append([int(line.strip().split(":")[1].strip()), count])
         if line.startswith("UV:"):
           uvMaps.append([line.strip().split(":")[1:], count])  # changed this to add the # of uv coordinates into the mix
         if line.startswith("MORPH"):
@@ -109,6 +89,26 @@ class OD_LWPasteFromExternal(lwsdk.ICommandSequence):
         if line.startswith("WEIGHT"):
           weightMaps.append([line.split(":")[1].strip(), count])
         count += 1
+      #create Points
+      for verts in vertline:
+        points = []
+        for i in xrange(verts[1] + 1, verts[1] + verts[0] + 1):
+          x = lines[i].split(" ")
+          pt = [ float(x[0]), float(x[1]), float(x[2].strip()) ]
+          points.append(mesh_edit_op.addPoint(mesh_edit_op.state, pt))
+      #create Polygons
+      for polygons in polyline:
+        polys = []
+        for i in xrange(polygons[1] + 1, polygons[1] + polygons[0] + 1):
+          pts = []
+          surf = (lines[i].split(";;")[1]).strip()
+          polytype = (lines[i].split(";;")[2]).strip()
+          for x in (lines[i].split(";;")[0]).strip().split(","):
+            pts.append(points[int(x.strip())])
+          ptype = lwsdk.LWPOLTYPE_FACE
+          if polytype == "CCSS": ptype = lwsdk.LWPOLTYPE_SUBD
+          elif polytype == "SUBD": ptype = lwsdk.LWPOLTYPE_PTCH
+          polys.append(mesh_edit_op.addPoly(mesh_edit_op.state, ptype, None, surf, pts))
       #setup  weightmaps
       for weightMap in weightMaps:
         mesh_edit_op.vMapSelect(mesh_edit_op.state, weightMap[0], lwsdk.LWVMAP_WGHT, 1)
@@ -125,7 +125,6 @@ class OD_LWPasteFromExternal(lwsdk.ICommandSequence):
           if lines[morphMap[1]+1+count].strip() != "None":
             mesh_edit_op.pntVMap(mesh_edit_op.state, point, lwsdk.LWVMAP_MORF, morphMap[0], [float(lines[morphMap[1]+1+count].split(" ")[0]), float(lines[morphMap[1]+1+count].split(" ")[1]), float(lines[morphMap[1]+1+count].split(" ")[2])])
           count += 1
-
       #Set UV Map Values
       for uvMap in uvMaps:
         mesh_edit_op.vMapSelect(mesh_edit_op.state, uvMap[0][0], lwsdk.LWVMAP_TXUV, 2)
