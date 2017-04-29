@@ -130,9 +130,10 @@ class OD_LWCopyToExternal(lwsdk.ICommandSequence):
               discont.append([curPos, polys.index(poly), points.index(point)])
               c+= 1
             else: #otherwise, the uv coordinate is continuous
-              curPos = [mesh_edit_op.pointVGet(mesh_edit_op.state,point)[1][0], mesh_edit_op.pointVGet(mesh_edit_op.state, point)[1][1]]
-              cont.append([curPos, points.index(point)])
-              c+= 1
+              if mesh_edit_op.pointVGet(mesh_edit_op.state,point)[1] != None:
+                curPos = [mesh_edit_op.pointVGet(mesh_edit_op.state,point)[1][0], mesh_edit_op.pointVGet(mesh_edit_op.state, point)[1][1]]
+                cont.append([curPos, points.index(point)])
+                c+= 1
 
         f.write("UV:" + uvs + ":"+str(c) + "\n")
         for uvpos in discont:
