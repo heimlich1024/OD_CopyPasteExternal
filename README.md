@@ -74,6 +74,9 @@ Steve White has provided a Youtube Video here showing the use between Modo and L
 " target="_blank"><img src="http://img.youtube.com/vi/6jKi34irylo/0.jpg"
 alt="LW-Modo Usage" width="240" height="180" border="10" /></a>
 
+Pedro Alpiarça dos Santos has provided a <a href="https://vimeo.com/215360965">Vimeo Video</a> showing the use between Houdini, Blender and Lightwave.
+
+
 # TODO:
 
 * Houdini:  figure out how to get Morphs/Blendshapes integrated
