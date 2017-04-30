@@ -84,3 +84,5 @@ for uvMap in uvMaps:
         count +=1
 
 '''})
+
+hou.node('obj/geoIn/ImportScript/').setHardLocked(1)
