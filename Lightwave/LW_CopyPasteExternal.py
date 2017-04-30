@@ -76,7 +76,7 @@ class OD_LWCopyToExternal(lwsdk.ICommandSequence):
 
 
       polys = []
-      edit_op_result = mesh_edit_op.fastPolyScan(mesh_edit_op.state, self.fast_point_scan, (polys,), lwsdk.OPLYR_FG, 0)
+      edit_op_result = mesh_edit_op.fastPolyScan(mesh_edit_op.state, self.fast_poly_scan, (polys,), lwsdk.OPLYR_FG, 0)
       if edit_op_result != lwsdk.EDERR_NONE:
         mesh_edit_op.done(mesh_edit_op.state, edit_op_result, 0)
         return lwsdk.AFUNC_OK
@@ -137,7 +137,9 @@ class OD_LWCopyToExternal(lwsdk.ICommandSequence):
             pInfo = mesh_edit_op.pointVPGet(mesh_edit_op.state,point, poly)[1]
             if pInfo != None: #check if discontinous
               curPos = [pInfo[0], pInfo[1]]
+              #print "oh:", self.polyidxmap[str(poly)]
               discont.append([curPos, str(self.polyidxmap[str(poly)]), str(self.pointidxmap[str(point)])])
+              #discont.append([curPos, str(1), str(self.pointidxmap[str(point)])])
               c+= 1
             else: #otherwise, the uv coordinate is continuous
               if mesh_edit_op.pointVGet(mesh_edit_op.state,point)[1] != None:

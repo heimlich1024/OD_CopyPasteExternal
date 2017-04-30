@@ -75,7 +75,7 @@ class OD_LWCopyToExternal(lwsdk.ICommandSequence):
       edit_op_result = lwsdk.EDERR_NONE
 
       polys = []
-      edit_op_result = mesh_edit_op.fastPolyScan(mesh_edit_op.state, self.fast_point_scan, (polys,), lwsdk.OPLYR_FG, 0)
+      edit_op_result = mesh_edit_op.fastPolyScan(mesh_edit_op.state, self.fast_poly_scan, (polys,), lwsdk.OPLYR_FG, 0)
       if edit_op_result != lwsdk.EDERR_NONE:
         mesh_edit_op.done(mesh_edit_op.state, edit_op_result, 0)
         return lwsdk.AFUNC_OK
