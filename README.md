@@ -74,8 +74,11 @@ Steve White has provided a Youtube Video here showing the use between Modo and L
 " target="_blank"><img src="http://img.youtube.com/vi/6jKi34irylo/0.jpg"
 alt="LW-Modo Usage" width="240" height="180" border="10" /></a>
 
-Pedro Alpiarça dos Santos has provided a <a href="https://vimeo.com/215360965">Vimeo Video</a> showing the use between Houdini, Blender and Lightwave.
+Pedro Alpiarça dos Santos has provided a Youtube Video showing the use between Houdini, Blender and Lightwave.
 
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=PFFQxb3nMvw
+" target="_blank"><img src="http://img.youtube.com/vi/PFFQxb3nMvw/0.jpg"
+alt="LW-Modo Usage" width="240" height="180" border="10" /></a>
 
 # TODO:
 
