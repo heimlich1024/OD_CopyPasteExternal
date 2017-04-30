@@ -35,7 +35,7 @@ class PasteFromExternal(bpy.types.Operator):
             morphMaps  = []
             weightMaps = []
             count      = 0
-            #Parse File to see what Data we have
+            #Parse File to see what Data we have here
             for line in lines:
               if line.startswith("VERTICES:"):
                 vertline.append([int(line.strip().split(":")[1].strip()), count])
@@ -54,7 +54,7 @@ class PasteFromExternal(bpy.types.Operator):
               verts = []
               for i in range(v[1] + 1, v[1] + v[0] + 1):
                 x = lines[i].split(" ")
-                pt = [ float(x[0].strip()), float(x[2].strip()), float(x[1].strip()) ]
+                pt = [ float(x[0].strip()), float(x[2].strip())*-1, float(x[1].strip()) ]
                 verts.append(pt)
 
             for polygons in polyline:

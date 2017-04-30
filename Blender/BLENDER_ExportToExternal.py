@@ -51,7 +51,7 @@ class CopyToExternal(bpy.types.Operator):
             for vert in obj.data.vertices:
                 f.write(str(vert.co[0]) + " " + str(vert.co[2]) + " " + str(vert.co[1]*-1) + "\n")
 
-            #write polygons-point connection for poly reconstruction
+            #write polygons-point connection for poly reconstructions
             f.write("POLYGONS:" + str(poly_count) + "\n")
             for poly in obj.data.polygons:
                 surf = "Default"
