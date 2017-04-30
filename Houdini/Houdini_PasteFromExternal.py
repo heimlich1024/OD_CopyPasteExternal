@@ -1,6 +1,9 @@
-hou.node('obj/').createNode("geo", "geoIn", run_init_scripts = False)
-hou.node('obj/geoIn/').createNode("python", "ImportScript" )
-hou.node('obj/geoIn/ImportScript/').setParms({"python": '''
+import random
+offset = random.randint(0, 1000000)
+
+hou.node('obj/').createNode("geo", 'geoIn'+str(offset)+'', run_init_scripts = False)
+hou.node('obj/geoIn'+str(offset)+'/').createNode("python", "ImportScript" )
+hou.node('obj/geoIn'+str(offset)+'/ImportScript/').setParms({"python": '''
 # encoding: utf-8
 import tempfile, os, random, sys, re
 
@@ -85,4 +88,4 @@ for uvMap in uvMaps:
 
 '''})
 
-hou.node('obj/geoIn/ImportScript/').setHardLocked(1)
+hou.node('obj/geoIn'+str(offset)+'/ImportScript/').setHardLocked(1)
