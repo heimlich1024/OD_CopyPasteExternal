@@ -23,13 +23,21 @@ except ImportError:
 class OD_LWCopyToExternal(lwsdk.ICommandSequence):
   def __init__(self, context):
     super(OD_LWCopyToExternal, self).__init__()
+    self.pidx=0
+    self.poidx=0
+    self.pointidxmap = {}
+    self.polyidxmap = {}
 
   def fast_point_scan(self, point_list, point_id):
     point_list.append(point_id)
+    self.pointidxmap[str(point_id)] = self.pidx
+    self.pidx+=1
     return lwsdk.EDERR_NONE
 
   def fast_poly_scan(self, poly_list, poly_id):
     poly_list.append(poly_id)
+    self.polyidxmap[str(poly_id)] = self.poidx
+    self.poidx+=1
     return lwsdk.EDERR_NONE
 
   # LWCommandSequence -----------------------------------
@@ -96,7 +104,7 @@ class OD_LWCopyToExternal(lwsdk.ICommandSequence):
         surf = mesh_edit_op.polySurface(mesh_edit_op.state,poly)
         ppoint = ""
         for point in mesh_edit_op.polyPoints(mesh_edit_op.state,poly):
-          ppoint += "," + str(points.index(point))
+          ppoint += "," + str(self.pointidxmap[str(point)])
         polytype = "FACE"
         subD = mesh_edit_op.polyType(mesh_edit_op.state, poly)# & lwsdk.LWPOLTYPE_SUBD
         if subD == lwsdk.LWPOLTYPE_SUBD:
@@ -127,12 +135,12 @@ class OD_LWCopyToExternal(lwsdk.ICommandSequence):
             pInfo = mesh_edit_op.pointVPGet(mesh_edit_op.state,point, poly)[1]
             if pInfo != None: #check if discontinous
               curPos = [pInfo[0], pInfo[1]]
-              discont.append([curPos, polys.index(poly), points.index(point)])
+              discont.append([curPos, str(self.polyidxmap[str(poly)]), str(self.pointidxmap[str(point)])])
               c+= 1
             else: #otherwise, the uv coordinate is continuous
               if mesh_edit_op.pointVGet(mesh_edit_op.state,point)[1] != None:
                 curPos = [mesh_edit_op.pointVGet(mesh_edit_op.state,point)[1][0], mesh_edit_op.pointVGet(mesh_edit_op.state, point)[1][1]]
-                cont.append([curPos, points.index(point)])
+                cont.append([curPos, str(self.pointidxmap[str(point)])])
                 c+= 1
 
         f.write("UV:" + uvs + ":"+str(c) + "\n")
