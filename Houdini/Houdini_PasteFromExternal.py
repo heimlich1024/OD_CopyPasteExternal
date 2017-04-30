@@ -1,8 +1,8 @@
 hou.node('obj/').createNode("geo", "geoIn", run_init_scripts = False)
 hou.node('obj/geoIn/').createNode("python", "ImportScript" )
 hou.node('obj/geoIn/ImportScript/').setParms({"python": '''
-
-import tempfile, os, random, sys
+# encoding: utf-8
+import tempfile, os, random, sys, re
 
 filePath = tempfile.gettempdir() + os.sep + ".." + os.sep + "ODVertexData.txt" #this is the temp file where everything is stored
 #print filePath
@@ -47,6 +47,7 @@ for polygons in polyline:
     for i in xrange(polygons[1] + 1, polygons[1] + polygons[0] + 1):
         pts = []
         surf = (lines[i].split(";;")[1]).strip()
+        surf = re.sub(r"[^a-z0-9]", lambda m: "_{:02x}".format(ord(m.group())), surf)
         polytype = (lines[i].split(";;")[2]).strip()
         for x in (lines[i].split(";;")[0]).strip().split(","):
             pts.append(int(x.strip()))
@@ -60,6 +61,7 @@ for polygons in polyline:
 
 #Create Weights
 for weightMap in weightMaps:
+    weightMap[0] = re.sub(r"[^a-z0-9]", lambda m: "_{:02x}".format(ord(m.group())), weightMap[0])
     geo.addAttrib(hou.attribType.Point, weightMap[0], 0.0)
     count = 0
     for point in points:

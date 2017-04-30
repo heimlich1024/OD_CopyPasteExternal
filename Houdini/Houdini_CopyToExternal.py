@@ -10,7 +10,8 @@ for node in hou.node('obj/'+sel).children():
 
 hou.node('obj/'+sel).createNode("python", "ExportScript" )
 hou.node('obj/'+sel+'/ExportScript/').setParms({"python": '''
-import tempfile, os, random, sys
+# encoding: utf-8
+import tempfile, os, random, sys, re
 
 filePath = tempfile.gettempdir() + os.sep + ".." + os.sep + "ODVertexData.txt"
 
@@ -51,8 +52,9 @@ if len(geo.points()) > 0:
 
     if len(weights) > 0:
         for wmap in weights:
+            wmapName = re.sub(r"_..", lambda m: chr(int(m.group()[1:], 16)), wmap.lower())
             attrib = wmap
-            f.write("WEIGHT:" + wmap + "\\n")
+            f.write("WEIGHT:" + wmapName + "\\n")
             for p in geo.points():
                 f.write(str(p.attribValue(wmap))+ "\\n")
 
