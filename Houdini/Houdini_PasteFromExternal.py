@@ -53,8 +53,12 @@ for polygons in polyline:
         surf = re.sub(r"[^a-z0-9]", lambda m: "_{:02x}".format(ord(m.group())), surf)
         polytype = (lines[i].split(";;")[2]).strip()
         for x in (lines[i].split(";;")[0]).strip().split(","):
+
             pts.append(int(x.strip()))
-        poly = geo.createPolygon()#makes th ePoly
+        pts.insert(len(pts), pts[0])
+        pts.pop(0)
+        pts = reversed(pts)
+        poly = geo.createPolygon()#makes the Poly
         for p in pts:
             pVertex.append(poly.addVertex(points[p]))#adds vertex to position Poly
         if surf not in surfList:

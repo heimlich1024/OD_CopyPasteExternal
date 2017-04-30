@@ -94,7 +94,7 @@ class OD_LWPasteFromExternal(lwsdk.ICommandSequence):
         points = []
         for i in xrange(verts[1] + 1, verts[1] + verts[0] + 1):
           x = lines[i].split(" ")
-          pt = [ float(x[0]), float(x[1]), float(x[2].strip()) ]
+          pt = [ float(x[0]), float(x[1]), float(x[2].strip())*-1 ]
           points.append(mesh_edit_op.addPoint(mesh_edit_op.state, pt))
       #create Polygons
       for polygons in polyline:
@@ -104,7 +104,7 @@ class OD_LWPasteFromExternal(lwsdk.ICommandSequence):
           surf = (lines[i].split(";;")[1]).strip()
           polytype = (lines[i].split(";;")[2]).strip()
           for x in (lines[i].split(";;")[0]).strip().split(","):
-            pts.append(points[int(x.strip())])
+            pts.insert(0, (points[int(x.strip())]))
           ptype = lwsdk.LWPOLTYPE_FACE
           if polytype == "CCSS": ptype = lwsdk.LWPOLTYPE_SUBD
           elif polytype == "SUBD": ptype = lwsdk.LWPOLTYPE_PTCH

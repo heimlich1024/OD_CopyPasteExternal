@@ -98,14 +98,14 @@ class OD_LWCopyToExternal(lwsdk.ICommandSequence):
       # Filling Position Array for Selected Point
       for point in points:
         pos = mesh_edit_op.pointPos(mesh_edit_op.state, point)
-        f.write(str(pos[0]) + " " + str(pos[1]) + " " + str(pos[2]) + "\n")
+        f.write(str(pos[0]) + " " + str(pos[1]) + " " + str(pos[2]*-1) + "\n")
       #write polygons-point connection for poly reconstruction
       f.write("POLYGONS:" + str(len(polys)) + "\n")
       x =0
       for poly in polys:
         surf = mesh_edit_op.polySurface(mesh_edit_op.state,poly)
         ppoint = ""
-        for point in mesh_edit_op.polyPoints(mesh_edit_op.state,poly):
+        for point in reversed(mesh_edit_op.polyPoints(mesh_edit_op.state,poly)):
           ppoint += "," + str(self.pointidxmap[str(point)])
         polytype = "FACE"
         subD = mesh_edit_op.polyType(mesh_edit_op.state, poly)# & lwsdk.LWPOLTYPE_SUBD
@@ -250,7 +250,7 @@ class OD_LWPasteFromExternal(lwsdk.ICommandSequence):
         points = []
         for i in xrange(verts[1] + 1, verts[1] + verts[0] + 1):
           x = lines[i].split(" ")
-          pt = [ float(x[0]), float(x[1]), float(x[2].strip()) ]
+          pt = [ float(x[0]), float(x[1]), float(x[2].strip())*-1 ]
           points.append(mesh_edit_op.addPoint(mesh_edit_op.state, pt))
       #create Polygons
       for polygons in polyline:
@@ -260,7 +260,8 @@ class OD_LWPasteFromExternal(lwsdk.ICommandSequence):
           surf = (lines[i].split(";;")[1]).strip()
           polytype = (lines[i].split(";;")[2]).strip()
           for x in (lines[i].split(";;")[0]).strip().split(","):
-            pts.append(points[int(x.strip())])
+            #pts.append(points[int(x.strip())])
+            pts.insert(0, (points[int(x.strip())]))
           ptype = lwsdk.LWPOLTYPE_FACE
           if polytype == "CCSS": ptype = lwsdk.LWPOLTYPE_SUBD
           elif polytype == "SUBD": ptype = lwsdk.LWPOLTYPE_PTCH

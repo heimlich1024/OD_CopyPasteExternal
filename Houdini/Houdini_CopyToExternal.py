@@ -3,10 +3,10 @@ for node in hou.selectedNodes():
     selPath = node.path()
 sel = selPath.split("/")[-2]
 
-scale = 1  #somehow, normal meshes, that werent transfered need to have their z axis inverted otherwise they show flipped
-for node in hou.node('obj/'+sel).children():
-    if "ImportScript" in node.name(): scale = 1
-    else: scale = -1
+#scale = 1  #somehow, normal meshes, that werent transfered need to have their z axis inverted otherwise they show flipped
+#for node in hou.node('obj/'+sel).children():
+#    if "ImportScript" in node.name(): scale = 1
+#    else: scale = -1
 
 hou.node('obj/'+sel).createNode("python", "ExportScript" )
 hou.node('obj/'+sel+'/ExportScript/').setParms({"python": '''
@@ -24,7 +24,7 @@ if len(geo.points()) > 0:
     f.write("VERTICES:"+str(len(geo.points())) + "\\n")
     for point in geo.points():
         pos = point.position()
-        f.write(str(pos[0]) + " " + str(pos[1]) + " " + str(pos[2]*'''+str(scale)+''') + "\\n")
+        f.write(str(pos[0]) + " " + str(pos[1]) + " " + str(pos[2]) + "\\n")
 
     uvs = []
     check = geo.findVertexAttrib("uv")
@@ -32,14 +32,19 @@ if len(geo.points()) > 0:
     count = 0
     for (fid, prim) in enumerate(geo.prims()):
         ppoint = ""
-        for point in prim.vertices():
+        for point in reversed(prim.vertices()):
              ppoint += "," + str(hou.Vertex.point(point).number())
              if check != None:
                 uvs.append(str(point.attribValue("uv")[0]) + " " + str(point.attribValue("uv")[1]) + ":PLY:" + str(count) + ":PNT:" + str(hou.Vertex.point(point).number()) + "\\n")
         surf = "Default"
         polytype = "FACE"
-        #print ppoint
-        f.write(ppoint[1:] + ";;" + surf + ";;" + polytype + "\\n")
+
+        transform = ppoint[1:].split(",")
+        transform.insert(0, transform[-1])
+        transform = transform[:-1]
+        ppoint = ",".join(transform)
+
+        f.write(ppoint + ";;" + surf + ";;" + polytype + "\\n")
         count += 1
 
     attribs = geo.pointAttribs()

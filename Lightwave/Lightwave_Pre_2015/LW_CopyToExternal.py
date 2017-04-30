@@ -97,13 +97,13 @@ class OD_LWCopyToExternal(lwsdk.ICommandSequence):
       # Filling Position Array for Selected Point
       for point in points:
         pos = mesh_edit_op.pointPos(mesh_edit_op.state, point)
-        f.write(str(pos[0]) + " " + str(pos[1]) + " " + str(pos[2]) + "\n")
+        f.write(str(pos[0]) + " " + str(pos[1]) + " " + str(pos[2]*-1) + "\n")
       #write polygons-point connection for poly reconstruction
       f.write("POLYGONS:" + str(len(polys)) + "\n")
       for poly in polys:
         surf = mesh_edit_op.polySurface(mesh_edit_op.state,poly)
         ppoint = ""
-        for point in mesh_edit_op.polyPoints(mesh_edit_op.state,poly):
+        for point in reversed(mesh_edit_op.polyPoints(mesh_edit_op.state,poly)):
           ppoint += "," + str(self.pointidxmap[str(point)])
         polytype = "FACE"
         subD = mesh_edit_op.polyType(mesh_edit_op.state, poly)# & lwsdk.LWPOLTYPE_SUBD
