@@ -68,12 +68,12 @@ class OD_PasteFromExternal(lxu.command.BasicCommand):
         scene.select(mesh)
         geo = mesh.geometry
 
-        #generate points
-        points = []
-        for i in xrange(verts[1] + 1, verts[1] + verts[0] + 1):
-          x = lines[i].split(" ")
-          pt = [ float(x[0]), float(x[1]), float(x[2].strip()) ]
-          points.append(geo.vertices.new((float(x[0])), float(x[1]), float(x[2].strip())))
+        for verts in vertline:
+          #generate points
+          points = []
+          for i in xrange(verts[1] + 1, verts[1] + verts[0] + 1):
+            x = lines[i].split(" ")
+            points.append(geo.vertices.new((float(x[0]), float(x[1]), float(x[2].strip()))))
 
         #Query Existing Materials
         allsurfaces = []
