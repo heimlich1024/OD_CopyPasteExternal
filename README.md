@@ -1,11 +1,11 @@
 # OD_CopyPasteExternal
-Easily copying and pasting of geometry between 3D Applications              [Quick Download](https://github.com/heimlich1024/OD_CopyPasteExternal/archive/master.zip)
+Easily copying and pasting of geometry and common atributes across 3D Applications, perfect for quick iterations between them, without concerns about file management.              [Quick Download](https://github.com/heimlich1024/OD_CopyPasteExternal/archive/master.zip)
 
 # Why ?
 
 Because quite frankly nothing thats this easy exists.  And if you are like me working in environments using
 multiple applications, this becomes extremely beneficial.  I opensourced it, in the hope, that there are other
-people willing to contributes, in applications that I have either a) not touched, or b) have not as much experience
+people willing to contribute, in applications that I have either a) not touched, or b) have not as much experience
 in to make this even better than it already is.  So if you are willing to contribute, please get in touch with me.
 
 Currently, it uses an always existing temporary directory to store the intermediate custom file on the local machine,
@@ -70,10 +70,24 @@ options tab, you can name the tools, click apply and accept, and you are good to
 
   Go to the Issues tab in GitHub, and open a new ticket.  Its helpful if you can attach the ODVertData.txt that will
   have been created in your temp folder.
-* How do i change where the temporary file is stored ?
+* How do I change where the temporary file is stored ?
 
   While you should not have to change the path (the nice thing is that its a worryfree setup) you can open the .py scripts
   in a text editor, and adjust the line where I define the file for ODVertData.txt 
+* Why are you not using obj, fbx or alembic ?
+
+  Simply because simplicity.  I choose the ASCII format so that any app and any person can look at the data, and write a parser
+  if need be.  Doing this via alembic or fbx makes it much more difficult, and there's quite a few applications that don't support
+  alembic/etc.  Also, there's applications that use javascript or ruby, which, it would be a lot more work to make them function.
+  This concept is not about asset transfering.  While i want to preserve as UV's, weights, morphs, etc, its is not about maintaining
+  poses, relationships, scenedata, etc.  It is simply about providing a brainless "fire & forget" approach to quick move an object
+  between apps.  Think of it more along the lines of what GoZ does for zbrush, or the applink mechanism of 3DCoat.
+* I looked at the code, and there's stuff in there that could definintely be cleaned up and made more "proper".  Would you be offended 
+  if I take a stab at it ?
+  
+  I wouldn't be offended at all.  Please by all means, thats why I open-sourced this project so that people would take a look, make it 
+  better, come up with cleverer ways to provide such needed workflows.  So If you feel that you have a better approach to the data in 
+  Maya, or other apps, please feel free.  Contribute !
 
   
 # Tutorials & Videos
