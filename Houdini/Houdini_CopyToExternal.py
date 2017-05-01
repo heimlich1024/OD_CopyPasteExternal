@@ -56,7 +56,7 @@ if len(geo.points()) > 0:
 
     if len(weights) > 0:
         for wmap in weights:
-            wmapName = re.sub(r"_..", lambda m: chr(int(m.group()[1:], 16)), wmap.lower())
+            wmapName = re.sub(r"_..", lambda m: chr(int(m.group()[1:], 16)), wmap)
             attrib = wmap
             f.write("WEIGHT:" + wmapName + "\\n")
             for p in geo.points():
