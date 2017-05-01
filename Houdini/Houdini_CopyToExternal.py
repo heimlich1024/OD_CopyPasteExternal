@@ -1,15 +1,15 @@
 selnode = hou.selectedNodes()
-for node in hou.selectedNodes():
-    selPath = node.path()
-sel = selPath.split("/")[-2]
 
-#scale = 1  #somehow, normal meshes, that werent transfered need to have their z axis inverted otherwise they show flipped
-#for node in hou.node('obj/'+sel).children():
-#    if "ImportScript" in node.name(): scale = 1
-#    else: scale = -1
+if len(selnode) != 1:
+    print "You need to have a SOP Selected that you want to export."
+else:
+    for node in hou.selectedNodes():
+        selPath = node.path()
+    sel = selPath.split("/")[-2]
 
-hou.node('obj/'+sel).createNode("python", "ExportScript" )
-hou.node('obj/'+sel+'/ExportScript/').setParms({"python": '''
+    if len(selPath.split("/")) > 3:
+        hou.node('obj/'+sel).createNode("python", "ExportScript" )
+        hou.node('obj/'+sel+'/ExportScript/').setParms({"python": '''
 # encoding: utf-8
 import tempfile, os, random, sys, re
 
@@ -69,15 +69,17 @@ if len(geo.points()) > 0:
     f.close()
     '''})
 
-hou.node('obj/'+sel).createNode("convert", "ODConvertToPolygon" )
-hou.node('obj/'+sel+'/ODConvertToPolygon/').setInput(0, hou.node(selPath))
-hou.node('obj/'+sel+'/ExportScript/').setInput(0, hou.node('obj/'+sel+'/ODConvertToPolygon/'))
+        hou.node('obj/'+sel).createNode("convert", "ODConvertToPolygon" )
+        hou.node('obj/'+sel+'/ODConvertToPolygon/').setInput(0, hou.node(selPath))
+        hou.node('obj/'+sel+'/ExportScript/').setInput(0, hou.node('obj/'+sel+'/ODConvertToPolygon/'))
 
 
-#hou.node('obj/'+sel+'/ExportScript/').setInput(0, hou.node(selPath))
-hou.node('obj/'+sel+'/ExportScript/').setDisplayFlag(True)
-hou.node('obj/'+sel+'/ExportScript/').setRenderFlag(True)
-hou.node('obj/'+sel+'/ExportScript/').setCurrent(1, False)
-hou.node('obj/'+sel+'/ExportScript/').cook(force=True, frame_range=(int(hou.frame()),int(hou.frame())))
-hou.node('obj/'+sel+'/ExportScript/').destroy()
-hou.node('obj/'+sel+'/ODConvertToPolygon/').destroy()
+        #hou.node('obj/'+sel+'/ExportScript/').setInput(0, hou.node(selPath))
+        hou.node('obj/'+sel+'/ExportScript/').setDisplayFlag(True)
+        hou.node('obj/'+sel+'/ExportScript/').setRenderFlag(True)
+        hou.node('obj/'+sel+'/ExportScript/').setCurrent(1, False)
+        hou.node('obj/'+sel+'/ExportScript/').cook(force=True, frame_range=(int(hou.frame()),int(hou.frame())))
+        hou.node('obj/'+sel+'/ExportScript/').destroy()
+        hou.node('obj/'+sel+'/ODConvertToPolygon/').destroy()
+    else:
+        print "Need to select at SOP Level"
