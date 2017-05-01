@@ -65,7 +65,17 @@ Start Houdini and Right Click on an empty space in the shelf and select New Tool
 Then go to the Scrips Tab and paste the contents of the python file there.  In the
 options tab, you can name the tools, click apply and accept, and you are good to go.
 
+# FAQ
+* How do I report an issue ?  
 
+  Go to the Issues tab in GitHub, and open a new ticket.  Its helpful if you can attach the ODVertData.txt that will
+  have been created in your temp folder.
+* How do i change where the temporary file is stored ?
+
+  While you should not have to change the path (the nice thing is that its a worryfree setup) you can open the .py scripts
+  in a text editor, and adjust the line where I define the file for ODVertData.txt 
+
+  
 # Tutorials & Videos
 
 Steve White has provided a Youtube Video here showing the use between Modo and Lightwave.
