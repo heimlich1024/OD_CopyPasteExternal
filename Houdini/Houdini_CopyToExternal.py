@@ -30,6 +30,9 @@ if len(geo.points()) > 0:
     check = geo.findVertexAttrib("uv")
     f.write("POLYGONS:"+str(len(geo.prims())) + "\\n")
     count = 0
+    surfaces = []
+    for attr in geo.primAttribs():
+        surfaces.append(attr.name())
     for (fid, prim) in enumerate(geo.prims()):
         ppoint = ""
         for point in reversed(prim.vertices()):
@@ -37,6 +40,10 @@ if len(geo.points()) > 0:
              if check != None:
                 uvs.append(str(point.attribValue("uv")[0]) + " " + str(point.attribValue("uv")[1]) + ":PLY:" + str(count) + ":PNT:" + str(hou.Vertex.point(point).number()) + "\\n")
         surf = "Default"
+        for surface in surfaces:
+            if prim.attribValue(surface) == 1:
+                surf = surface
+                break
         polytype = "FACE"
 
         transform = ppoint[1:].split(",")
