@@ -36,8 +36,22 @@ class OD_CopyToExternal(lxu.command.BasicCommand):
       #Setup File/path to where we store the temporary Data
       file = tempfile.gettempdir() + os.sep + "ODVertexData.txt"
 
-      #Set Active Mesh to First Selected Mesh
-      selmeshes = scene.selectedByType("mesh")
+
+      fusion = 0
+      selmeshes = scene.selected
+      if selmeshes[0].type == "mesh":
+          selmeshes = selmeshes
+      elif selmeshes[0].type == "sdf.item":
+          fusion = 1
+          #get original name
+          itemname = selmeshes[0].name
+          #duplicate meshfusion item
+          lx.eval('item.duplicate false locator false true')
+          #select original meshfusion item
+          scene.select(selmeshes[0])
+          #convert original meshfusion item to mesh, as we cannot convert the duplicate - creates empty item on duplicate
+          lx.eval('item.setType mesh sdf.item')
+          selmeshes = scene.selected
 
       if len(selmeshes) > 0:
         mesh = selmeshes[0]
@@ -110,6 +124,15 @@ class OD_CopyToExternal(lxu.command.BasicCommand):
           f.close()
       else:
         modo.dialogs.alert("No Mesh Selected", "You need to select the mesh Item you want to copy", "info")
+
+      if fusion == 1:
+          #delete converted item
+          scene.removeItems(scene.selected[0])
+          #select the duplicated meshfusion item
+          x = scene.select(itemname)
+          #change name of of the duplicate to the original meshfusion name
+          scene.selected[0].SetName(itemname)
+
 
     def cmd_Query(self, index, vaQuery):
         lx.notimpl()
