@@ -57,29 +57,28 @@ class PasteFromExternal(bpy.types.Operator):
                 pt = [ float(x[0].strip()), float(x[2].strip())*-1, float(x[1].strip()) ]
                 verts.append(pt)
 
+            blenderMats = bpy.data.materials[:]
+            blenderMatsNames = []
+            for bm in blenderMats:
+              blenderMatsNames.append(bm.name)
+
             for polygons in polyline:
               faces = []
-              allMats = []
               facesMat = []
+              objMats = []
               for i in range(polygons[1] + 1, polygons[1] + polygons[0] + 1):
                 pts = []
                 surf = (lines[i].split(";;")[1]).strip()
                 for x in (lines[i].split(";;")[0]).strip().split(","):
                   pts.append(int(x.strip()))
                 faces.append(pts)
+                if surf not in blenderMatsNames:
+                  blenderMatsNames.append(surf)
+                  bpy.data.materials.new(surf)
+                  #obj.data.materials.append(blenderSurf)
+                if surf not in objMats:
+                  objMats.append(surf)
                 facesMat.append(surf)
-                if surf not in allMats:
-                  allMats.append(surf)
-
-            count = 0
-            for line in lines:
-              if line.startswith("UV:"):
-                uvMaps.append([line.strip().split(":")[1:], count])  # changed this to add the # of uv coordinates into the mix
-              if line.startswith("MORPH"):
-                morphMaps.append([line.split(":")[1].strip(), count])
-              if line.startswith("WEIGHT"):
-                weightMaps.append([line.split(":")[1].strip(), count])
-              count += 1
 
             #remove old object first
             obj = bpy.context.active_object
@@ -107,24 +106,19 @@ class PasteFromExternal(bpy.types.Operator):
                 # link the object to the scene (it is not visible so far!)
                 bpy.context.scene.objects.link(obj)
 
-            #assign materials
-            blenderMats = []
-            for surf in allMats:
-                blenderSurf = bpy.data.materials.get(surf)
-                if blenderSurf == None:
-                    blenderSurf = bpy.data.materials.new(surf)
-                    obj.data.materials.append(blenderSurf)
-                blenderMats.append(blenderSurf)
+            for i in range(len(obj.material_slots)):
+              bpy.ops.object.material_slot_remove({'object': obj})
+            for mat in objMats:
+              obj.data.materials.append(bpy.data.materials.get(mat))
 
             for i in range(len(faces)):
-                obj.data.polygons[i].material_index = allMats.index(facesMat[i])+1
+              obj.data.polygons[i].material_index = objMats.index(facesMat[i])
 
             # create vertex group lookup dictionary for names
             vgroup_names = {vgroup.index: vgroup.name for vgroup in obj.vertex_groups}
 
             # create dictionary of vertex group assignments per vertex
             vgroups = {v.index: [vgroup_names[g.group] for g in v.groups] for v in obj.data.vertices}
-            #print(vgroup_names)
 
             for x in obj.vertex_groups:
                 obj.vertex_groups.remove(x)
