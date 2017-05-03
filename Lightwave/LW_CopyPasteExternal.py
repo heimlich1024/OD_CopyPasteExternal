@@ -203,9 +203,6 @@ class OD_LWPasteFromExternal(lwsdk.ICommandSequence):
       lwsdk.LWMessageFuncs().info("Storage File does not exist.  Needs to be created via the Layout CopyTransform counterpart", "")
       return 0
 
-    #get the pointcount from the file
-    pntCount = int(lines[0].split(":")[1].strip())
-
     #find existing Vmaps
     loaded_weight = []; loaded_uv = []; loaded_morph = []
     for u in range(0, lwsdk.LWObjectFuncs().numVMaps( lwsdk.LWVMAP_WGHT )):
