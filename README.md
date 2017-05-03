@@ -66,14 +66,14 @@ Then go to the Scrips Tab and paste the contents of the python file there.  In t
 options tab, you can name the tools, click apply and accept, and you are good to go.
 
 # FAQ
-* How do I report an issue ?  
+* How do I report an issue ?
 
   Go to the Issues tab in GitHub, and open a new ticket.  Its helpful if you can attach the ODVertData.txt that will
   have been created in your temp folder.
 * How do I change where the temporary file is stored ?
 
   While you should not have to change the path (the nice thing is that its a worryfree setup) you can open the .py scripts
-  in a text editor, and adjust the line where I define the file for ODVertData.txt 
+  in a text editor, and adjust the line where I define the file for ODVertData.txt
 * Why are you not using obj, fbx or alembic ?
 
   Simply because simplicity.  I choose the ASCII format so that any app and any person can look at the data, and write a parser
@@ -82,14 +82,14 @@ options tab, you can name the tools, click apply and accept, and you are good to
   This concept is not about asset transfering.  While i want to preserve as UV's, weights, morphs, etc, its is not about maintaining
   poses, relationships, scenedata, etc.  It is simply about providing a brainless "fire & forget" approach to quick move an object
   between apps.  Think of it more along the lines of what GoZ does for zbrush, or the applink mechanism of 3DCoat.
-* I looked at the code, and there's stuff in there that could definintely be cleaned up and made more "proper".  Would you be offended 
+* I looked at the code, and there's stuff in there that could definintely be cleaned up and made more "proper".  Would you be offended
   if I take a stab at it ?
-  
-  I wouldn't be offended at all.  Please by all means, thats why I open-sourced this project so that people would take a look, make it 
-  better, come up with cleverer ways to provide such needed workflows.  So If you feel that you have a better approach to the data in 
+
+  I wouldn't be offended at all.  Please by all means, thats why I open-sourced this project so that people would take a look, make it
+  better, come up with cleverer ways to provide such needed workflows.  So If you feel that you have a better approach to the data in
   Maya, or other apps, please feel free.  Contribute !
 
-  
+
 # Tutorials & Videos
 
 Steve White has provided a Youtube Video here showing the use between Modo and Lightwave.
@@ -112,5 +112,6 @@ alt="LW-Modo Usage" width="240" height="180" border="10" /></a>
 * 3DsMax:   Implementation
 * XSI:	    Implementation
 * Sketchup: Implementation
+* ZBrush:   Implementation
 * Unreal:   R&D to see if its possible to implement
 * Unity:    R&D to see if its possible to implement
