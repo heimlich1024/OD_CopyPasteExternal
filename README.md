@@ -28,7 +28,8 @@ The following applications are supported:
 * Lightwave : Vertices / Polygons (incl. Subpatch and SubD)/ WeightMaps / UVMaps / MorphMaps
 * Blender   : Vertices / Polygons (incl. Subpatch and SubD)/ WeightMaps / UVMaps / MorphMaps
 * Maya      : Vertices / Polygons / Weights (via Vertex Normals) (Implementation by Andre Hotz)
-* Houdini   : Vertices / Polygons / Weightmaps, UVMaps (Paste Implementation by Chris Wells)
+* Houdini   : Vertices / Polygons / Weightmaps / VMaps
+* Rhino		: Vertices / Polygons (should be a good starting point for someone more experienced to finish it)
 * Others	: Looking for contributors to write implementations for other 3d Apps (see TODO)
 
 # Installation:
@@ -64,6 +65,14 @@ The plugins are then found under the object menu.
 Start Houdini and Right Click on an empty space in the shelf and select New Tool.
 Then go to the Scrips Tab and paste the contents of the python file there.  In the
 options tab, you can name the tools, click apply and accept, and you are good to go.
+
+### Rhino Install (V5+)
+
+Preliminary Python scripts to be put in the script editor and launch accordingly
+
+### 3DS Max (tested 2015+)
+
+Preliminary Paste script to be called from the Max Script Editor (see .py for instructions)
 
 # FAQ
 * How do I report an issue ?
