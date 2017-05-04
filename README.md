@@ -30,6 +30,8 @@ The following applications are supported:
 * Maya      : Vertices / Polygons / Weights (via Vertex Normals) (Implementation by Andre Hotz)
 * Houdini   : Vertices / Polygons / Weightmaps / VMaps
 * Rhino		: Vertices / Polygons (should be a good starting point for someone more experienced to finish it)
+* Sketchup  : Vertices / Polygons (Paste only for now - Initial implementation provided as starting point)
+* 3DsMax 	: Vertices / Poyygons (Initial implementation provided as a starting point)
 * Others	: Looking for contributors to write implementations for other 3d Apps (see TODO)
 
 # Installation:
@@ -73,6 +75,10 @@ Preliminary Python scripts to be put in the script editor and launch accordingly
 ### 3DS Max (tested 2015+)
 
 Preliminary Paste script to be called from the Max Script Editor (see .py for instructions)
+
+### Sketchup
+
+Copy the contents of the paste script into the Ruby Console Window in Sketchup
 
 # FAQ
 * How do I report an issue ?
@@ -120,7 +126,7 @@ alt="LW-Modo Usage" width="240" height="180" border="10" /></a>
 * Cinema4d: Implementation
 * 3DsMax:   Implementation
 * XSI:	    Implementation
-* Sketchup: Implementation
+* Sketchup: Add Copy To and finesse Paste implementation
 * ZBrush:   Implementation
 * Unreal:   R&D to see if its possible to implement
 * Unity:    R&D to see if its possible to implement
