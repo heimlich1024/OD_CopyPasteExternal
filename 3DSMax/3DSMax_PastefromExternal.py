@@ -82,12 +82,6 @@ def buildODMesh(mesh):
                 mesh.GetFace(count).SetEdgeVisFlags(1,1,0)
             count +=1
 
-    m = MaxPlus.Factory.CreateDefaultStdMat()
-    #m.Ambient = MaxPlus.Color(0, 0, 1)
-    # print m.Diffuse
-    # print m.GetName
-    #material setFaceMtlIndex(index, mtlid)
-
 def main():
     geom = MaxPlus.Factory.CreateGeomObject(MaxPlus.ClassIds.TriMeshGeometry)
     tri = MaxPlus.TriObject._CastFrom(geom)
