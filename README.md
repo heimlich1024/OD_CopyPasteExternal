@@ -119,7 +119,7 @@ Pedro Alpiarça dos Santos has provided a Youtube Video showing the use between 
 " target="_blank"><img src="http://img.youtube.com/vi/PFFQxb3nMvw/0.jpg"
 alt="Houdini-Blender-Lightwave Usage" width="240" height="180" border="10" /></a>
 
-Steve Gilbert dos Santos has provided a Youtube Video showing the use between 3DSMax and Blender.
+Steve Gilbert has provided a Youtube Video showing the use between 3DSMax and Blender.
 
 <a href="http://www.youtube.com/watch?feature=player_embedded&v=ATWYuD7uHxg
 " target="_blank"><img src="http://img.youtube.com/vi/ATWYuD7uHxg/0.jpg"
