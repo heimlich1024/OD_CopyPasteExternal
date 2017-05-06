@@ -84,7 +84,7 @@ Copy the contents of the paste script into the Ruby Console Window in Sketchup
 * How do I report an issue ?
 
   Go to the Issues tab in GitHub, and open a new ticket.  Its helpful if you can attach the ODVertData.txt that will
-  have been created in your temp folder.
+  have been created in your temp folder  Please also state the applications that you are going in between and which application the error occurs.
 * How do I change where the temporary file is stored ?
 
   While you should not have to change the path (the nice thing is that its a worryfree setup) you can open the .py scripts
