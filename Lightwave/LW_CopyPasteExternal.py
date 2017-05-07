@@ -274,7 +274,7 @@ class OD_LWPasteFromExternal(lwsdk.ICommandSequence):
       for uvMap in uvMaps:
         mesh_edit_op.vMapSelect(mesh_edit_op.state, uvMap[0][0], lwsdk.LWVMAP_TXUV, 2)
         count = 0
-        for i in range(uvMap[0][1]):
+        for i in range(int(uvMap[0][1])):
           split = lines[uvMap[1]+1+count].split(":")
           if len(split) > 3: #check the format to see if it has a point and poly classifier, determining with that, whether the uv is discontinuous or continuous
             mesh_edit_op.pntVPMap(mesh_edit_op.state, points[int(split[4])], polys[int(split[2])], lwsdk.LWVMAP_TXUV, uvMap[0][0], [float(split[0].split(" ")[0]), float(split[0].split(" ")[1])])
