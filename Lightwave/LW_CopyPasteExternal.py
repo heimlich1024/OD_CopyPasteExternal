@@ -182,13 +182,8 @@ class OD_LWPasteFromExternal(lwsdk.ICommandSequence):
   def __init__(self, context):
       super(OD_LWPasteFromExternal, self).__init__()
 
-  def fast_point_scan(self, point_list, point_id):
-    point_list.append(point_id)
-    return lwsdk.EDERR_NONE
-
   # LWCommandSequence -----------------------------------
   def process(self, mod_command):
-
     #get the command arguments (so that we can also run this from layout)
     cmd = mod_command.argument.replace('"', '')
 
@@ -196,21 +191,20 @@ class OD_LWPasteFromExternal(lwsdk.ICommandSequence):
 
     #open the temp file
     if os.path.exists(file):
-      f = open(file)
-      lines = f.readlines()
-      f.close()
+      with open(file, "r") as f:
+        lines = f.readlines()
     else:
       lwsdk.LWMessageFuncs().info("Storage File does not exist.  Needs to be created via the Layout CopyTransform counterpart", "")
       return 0
 
     #find existing Vmaps
-    loaded_weight = []; loaded_uv = []; loaded_morph = []
-    for u in range(0, lwsdk.LWObjectFuncs().numVMaps( lwsdk.LWVMAP_WGHT )):
-      loaded_weight.append(lwsdk.LWObjectFuncs().vmapName(lwsdk.LWVMAP_WGHT, u))
-    for u in range(0, lwsdk.LWObjectFuncs().numVMaps( lwsdk.LWVMAP_TXUV )):
-      loaded_uv.append(lwsdk.LWObjectFuncs().vmapName(lwsdk.LWVMAP_TXUV, u))
-    for u in range(0, lwsdk.LWObjectFuncs().numVMaps( lwsdk.LWVMAP_MORF )):
-      loaded_morph.append(lwsdk.LWObjectFuncs().vmapName(lwsdk.LWVMAP_MORF, u))
+    # loaded_weight = []; loaded_uv = []; loaded_morph = []
+    # for u in range(0, lwsdk.LWObjectFuncs().numVMaps( lwsdk.LWVMAP_WGHT )):
+    #   loaded_weight.append(lwsdk.LWObjectFuncs().vmapName(lwsdk.LWVMAP_WGHT, u))
+    # for u in range(0, lwsdk.LWObjectFuncs().numVMaps( lwsdk.LWVMAP_TXUV )):
+    #   loaded_uv.append(lwsdk.LWObjectFuncs().vmapName(lwsdk.LWVMAP_TXUV, u))
+    # for u in range(0, lwsdk.LWObjectFuncs().numVMaps( lwsdk.LWVMAP_MORF )):
+    #   loaded_morph.append(lwsdk.LWObjectFuncs().vmapName(lwsdk.LWVMAP_MORF, u))
 
     #check if we are in modeler, if so, clear polys
     if cmd == "":
@@ -225,13 +219,9 @@ class OD_LWPasteFromExternal(lwsdk.ICommandSequence):
       return lwsdk.AFUNC_OK
 
     try:
-      vertline   = []
-      polyline   = []
-      uvMaps     = []
-      morphMaps  = []
-      weightMaps = []
-      count      = 0
       #Parse File to see what Data we have
+      vertline = []; polyline = []; uvMaps = []; morphMaps = []; weightMaps = []
+      count = 0
       for line in lines:
         if line.startswith("VERTICES:"):
           vertline.append([int(line.strip().split(":")[1].strip()), count])
@@ -248,18 +238,17 @@ class OD_LWPasteFromExternal(lwsdk.ICommandSequence):
       for verts in vertline:
         points = []
         for i in xrange(verts[1] + 1, verts[1] + verts[0] + 1):
-          x = lines[i].split(" ")
-          pt = [ float(x[0]), float(x[1]), float(x[2].strip())*-1 ]
-          points.append(mesh_edit_op.addPoint(mesh_edit_op.state, pt))
+          x = map(float, lines[i].split())
+          points.append(mesh_edit_op.addPoint(mesh_edit_op.state, [ x[0], x[1], x[2]*-1 ]))
       #create Polygons
       for polygons in polyline:
         polys = []
         for i in xrange(polygons[1] + 1, polygons[1] + polygons[0] + 1):
           pts = []
-          surf = (lines[i].split(";;")[1]).strip()
-          polytype = (lines[i].split(";;")[2]).strip()
-          for x in (lines[i].split(";;")[0]).strip().split(","):
-            #pts.append(points[int(x.strip())])
+          split = lines[i].split(";;")
+          surf = split[1].strip()
+          polytype = split[2].strip()
+          for x in split[0].split(","):
             pts.insert(0, (points[int(x.strip())]))
           ptype = lwsdk.LWPOLTYPE_FACE
           if polytype == "CCSS": ptype = lwsdk.LWPOLTYPE_SUBD
@@ -285,33 +274,13 @@ class OD_LWPasteFromExternal(lwsdk.ICommandSequence):
       for uvMap in uvMaps:
         mesh_edit_op.vMapSelect(mesh_edit_op.state, uvMap[0][0], lwsdk.LWVMAP_TXUV, 2)
         count = 0
-        for i in range(int(uvMap[0][1])):
-          line = lines[uvMap[1]+1+count]
-          split = line.split(":")
+        for i in range(uvMap[0][1]):
+          split = lines[uvMap[1]+1+count].split(":")
           if len(split) > 3: #check the format to see if it has a point and poly classifier, determining with that, whether the uv is discontinuous or continuous
             mesh_edit_op.pntVPMap(mesh_edit_op.state, points[int(split[4])], polys[int(split[2])], lwsdk.LWVMAP_TXUV, uvMap[0][0], [float(split[0].split(" ")[0]), float(split[0].split(" ")[1])])
           else:
             mesh_edit_op.pntVMap(mesh_edit_op.state, points[int(split[2])], lwsdk.LWVMAP_TXUV, uvMap[0][0], [float(split[0].split(" ")[0]), float(split[0].split(" ")[1])])
           count +=1
-
-      # #remove unused UVMaps
-      # for m in loaded_uv:
-      #   if m not in str(uvMaps):
-      #     mesh_edit_op.vMapSelect(mesh_edit_op.state,  m, lwsdk.LWVMAP_TXUV, 2)
-      #     mesh_edit_op.vMapRemove(mesh_edit_op.state)
-
-      # # #remove unused UVMaps
-      # for m in loaded_weight:
-      #   if m not in str(weightMaps):
-      #     mesh_edit_op.vMapSelect(mesh_edit_op.state,  m, lwsdk.LWVMAP_WGHT, 1)
-      #     mesh_edit_op.vMapRemove(mesh_edit_op.state)
-
-      # # #remove unused UVMaps
-      # for m in loaded_morph:
-      #   if m not in str(morphMaps):
-      #     mesh_edit_op.vMapSelect(mesh_edit_op.state,  m, lwsdk.LWVMAP_MORF, 3)
-      #     mesh_edit_op.vMapRemove(mesh_edit_op.state)
-
     except:
       edit_op_result = lwsdk.EDERR_USERABORT
       raise
