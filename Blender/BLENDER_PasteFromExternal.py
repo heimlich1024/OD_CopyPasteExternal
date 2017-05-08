@@ -151,8 +151,8 @@ class PasteFromExternal(bpy.types.Operator):
                 if lines[morphMap[1]+1+count].strip() != "None":
                   x = float(lines[morphMap[1]+1+count].split(" ")[0])
                   y = float(lines[morphMap[1]+1+count].split(" ")[1])
-                  z = float(lines[morphMap[1]+1+count].split(" ")[2])
-                  newVert = Vector((vert.co[0] + x, vert.co[1] + z, vert.co[2]+y))
+                  z = float(lines[morphMap[1]+1+count].split(" ")[2])*-1
+                  newVert = Vector((vert.co[0] + x, vert.co[2] + z, vert.co[1]+y))
                   shapeKey.data[vert.index].co = newVert
                 count += 1
 
