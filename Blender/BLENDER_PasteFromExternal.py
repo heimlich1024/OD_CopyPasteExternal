@@ -156,6 +156,9 @@ class PasteFromExternal(bpy.types.Operator):
                   shapeKey.data[vert.index].co = newVert
                 count += 1
 
+            for x in mesh.uv_textures:
+                mesh.uv_textures.remove(x)
+
             for uvMap in uvMaps:
                 uv = mesh.uv_textures.new(uvMap[0][0])
                 bm = bmesh.new()
