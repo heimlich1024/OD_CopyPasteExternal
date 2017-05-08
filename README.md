@@ -32,6 +32,7 @@ The following applications are supported:
 * Rhino		: Vertices / Polygons (should be a good starting point for someone more experienced to finish it)
 * Sketchup  : Vertices / Polygons (Paste only for now - Initial implementation provided as starting point)
 * 3DsMax 	: Vertices / Poyygons (Initial implementation provided as a starting point)
+* XSI		: Vertices / Polygons / WeightMaps / Morphs
 * Others	: Looking for contributors to write implementations for other 3d Apps (see TODO)
 
 # Installation:
@@ -130,8 +131,7 @@ alt="3DSMax-Blender Usage" width="240" height="180" border="10" /></a>
 * Houdini:  figure out how to get Morphs/Blendshapes integrated
 * Maya:     figure out how to get Morphs/Blendshapes integrated
 * Cinema4d: Implementation
-* 3DsMax:   Implementation
-* XSI:	    Implementation
+* 3DsMax:   Initial Implementation as sample is complete
 * Sketchup: Add Copy To and finesse Paste implementation
 * ZBrush:   Implementation
 * Unreal:   R&D to see if its possible to implement
