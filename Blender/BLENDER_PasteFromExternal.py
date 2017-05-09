@@ -132,8 +132,8 @@ class PasteFromExternal(bpy.types.Operator):
                   vg.add([v], float(lines[weightMap[1]+1+count].strip()), "ADD")
                 count += 1
 
-            #this fails if there are no shapes (morphs)
-            #bpy.ops.object.shape_key_remove(all=True)
+            if obj.data.shape_keys != None:
+              bpy.ops.object.shape_key_remove(all=True)
 
             #create Base Shape Key
             if len(morphMaps) > 0:
@@ -152,7 +152,7 @@ class PasteFromExternal(bpy.types.Operator):
                   x = float(lines[morphMap[1]+1+count].split(" ")[0])
                   y = float(lines[morphMap[1]+1+count].split(" ")[1])
                   z = float(lines[morphMap[1]+1+count].split(" ")[2])*-1
-                  newVert = Vector((vert.co[0] + x, vert.co[2] + z, vert.co[1]+y))
+                  newVert = Vector((vert.co[0] + x, vert.co[1] + z, vert.co[2]+y))
                   shapeKey.data[vert.index].co = newVert
                 count += 1
 
