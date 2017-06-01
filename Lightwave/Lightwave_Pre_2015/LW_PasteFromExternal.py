@@ -117,13 +117,13 @@ class OD_LWPasteFromExternal(lwsdk.ICommandSequence):
           if lines[weightMap[1]+1+count].strip() != "None":
             mesh_edit_op.pntVMap(mesh_edit_op.state, point, lwsdk.LWVMAP_WGHT, weightMap[0], [float(lines[weightMap[1]+1+count].strip())])
           count += 1
-      #Set Mprph Map Values
+      #Set Morph Map Values
       for morphMap in morphMaps:
         mesh_edit_op.vMapSelect(mesh_edit_op.state, morphMap[0], lwsdk.LWVMAP_MORF, 3)
         count = 0
         for point in points:
           if lines[morphMap[1]+1+count].strip() != "None":
-            mesh_edit_op.pntVMap(mesh_edit_op.state, point, lwsdk.LWVMAP_MORF, morphMap[0], [float(lines[morphMap[1]+1+count].split(" ")[0]), float(lines[morphMap[1]+1+count].split(" ")[1]), float(lines[morphMap[1]+1+count].split(" ")[2])])
+            mesh_edit_op.pntVMap(mesh_edit_op.state, point, lwsdk.LWVMAP_MORF, morphMap[0], [float(lines[morphMap[1]+1+count].split(" ")[0]), float(lines[morphMap[1]+1+count].split(" ")[1]), float(lines[morphMap[1]+1+count].split(" ")[2])*-1])
           count += 1
       #Set UV Map Values
       for uvMap in uvMaps:
