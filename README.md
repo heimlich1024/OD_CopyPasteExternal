@@ -32,7 +32,9 @@ The following applications are supported:
 * Rhino		: Vertices / Polygons (should be a good starting point for someone more experienced to finish it)
 * Sketchup  : Vertices / Polygons (Paste only for now - Initial implementation provided as starting point)
 * 3DsMax 	: Vertices / Poyygons (Initial implementation provided as a starting point)
-* XSI		: Vertices / Polygons / WeightMaps / Morphs
+* XSI   : Vertices / Polygons / WeightMaps / Morphs
+* ZBrush : Vertices / Polygons / UVs
+* Mari : Vertices / Polygons / UVs (in beta)
 * Others	: Looking for contributors to write implementations for other 3d Apps (see TODO)
 
 # Installation:
@@ -80,6 +82,13 @@ Preliminary Paste script to be called from the Max Script Editor (see .py for in
 ### Sketchup
 
 Copy the contents of the paste script into the Ruby Console Window in Sketchup
+
+### ZBrush
+
+Copy the contents of the ZBrush folder in the download into the ZStartup/ZPlugs64 folder.
+So in the ZStartup/ZPlugs64 you should have the ODCopyPaste folder and also the zscript file.
+Currently only windows is supported, however, doing the same implementation for OSX shouldn't
+be hard.
 
 # FAQ
 * How do I report an issue ?
@@ -133,6 +142,7 @@ alt="3DSMax-Blender Usage" width="240" height="180" border="10" /></a>
 * Cinema4d: Implementation
 * 3DsMax:   Initial Implementation as sample is complete
 * Sketchup: Add Copy To and finesse Paste implementation
-* ZBrush:   Implementation
 * Unreal:   R&D to see if its possible to implement
 * Unity:    R&D to see if its possible to implement
+* Mari:    R&D to see if its possible to implement
+* Nuke:    R&D to see if its possible to implement
