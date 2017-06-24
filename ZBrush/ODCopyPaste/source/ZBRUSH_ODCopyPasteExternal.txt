@@ -1,0 +1,50 @@
+// CopyPasteToFromExternal.txt  - Oliver Hotz 2017
+// Groups disabled on save
+// buttons located in Zplugin:Misc Utilities submenu
+
+[IConfig, 3.1 ]
+[IShowActions, 0]
+
+[VarDef,Object1,"ZBRUSH_ZSTARTUP\ZPlugs64\ODCopyPaste\1.OBJ"]
+[VarSet,dllPath,"ZBRUSH_ZSTARTUP\ZPlugs64\ODCopyPaste\ZFileUtils64.dll"]
+[VarSet,importAppPath,"ZBRUSH_ZSTARTUP\ZPlugs64\ODCopyPaste\vertDataToObj.exe"]
+[VarSet,exportAppPath,"ZBRUSH_ZSTARTUP\ZPlugs64\ODCopyPaste\objToVertData.exe"]
+
+[VarSet,importAppPath,[FileNameResolvePath, importAppPath]]
+[VarSet,exportAppPath,[FileNameResolvePath, exportAppPath]]
+
+
+[IButton,"TOOL:  CopyToExt","Exporting...",
+
+	[If, [IGet, TRANSFORM:Edit] == 1,
+		[ISet, TOOL:Export:Grp, 0 ]
+		[FileNameSetNext, Object1 ]
+		[IKeyPress, 13, [IPress, TOOL:Export:Export ] ]
+
+	  	[VarSet, err, [FileExecute,[Var,dllPath],"LaunchAppWithFile", exportAppPath]] // exporting as obj, then convert to vertdata...
+	  	[If,err,
+	   		[Note,"An error occurred.",,2]
+	  	,//else OK
+	   		[Note,"File Exported",,2]
+	  	]
+	, // else
+		[Note, "No model in edit mode...", , 2 ]
+	]
+]
+
+[IButton,"TOOL:  PasteFromExt","Importing...",
+
+  	[VarSet, err, [FileExecute,[Var,dllPath],"LaunchAppWithFile", importAppPath]] // convert vertdata to obj, then import into zbrush...
+  	[If,err,
+   		[Note,"An error occurred.",,2]
+  	,//else OK
+   		[Note,"File imported",,2]
+  	]
+	[If, [FileExists, Object1 ] == 1,
+		[FileNameSetNext, Object1 ]
+		[IKeyPress, 13, [IPress, TOOL:Import:Import ] ]
+		[Note, "Model Imported...", , 2 ]
+	, // else
+		[Note, "Sorry, Source does not exist...", , 2 ]
+	]
+]
