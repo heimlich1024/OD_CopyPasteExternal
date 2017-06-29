@@ -55,7 +55,8 @@ def vertDataToObj(outputfile):
         else:
           newpts.append(str(int(p) + 1) + "/" + str(count+1))
           count += 1
-
+      output += "g " + lines[i].split(";;")[1].strip() + "\n"
+      output += "usemtl " + lines[i].split(";;")[1].strip() + "\n"
       output += "f " + " ".join(newpts) + "\n"
 
   #writing output file
