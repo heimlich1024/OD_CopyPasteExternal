@@ -9,13 +9,15 @@ def objToVertData(inputfile):
   points = []
   polygons = []
   uvs = []
+  count = 0
   for line in lines:
     if line.startswith("v "):
       points.append(line.strip()[2:])
     if line.startswith("f "):
-      polygons.append(line.strip()[2:])
+      polygons.append([line.strip()[2:], count])
     if line.startswith("vt "):
       uvs.append(line.strip()[2:])
+    count += 1
 
   output += "VERTICES:" + str(len(points)) + "\n"
   for p in points:
@@ -24,8 +26,9 @@ def objToVertData(inputfile):
   output += "POLYGONS:" + str(len(polygons)) + "\n"
   count = 0
   uvinfo = []
+  mat = "Default"
   for poly in polygons:
-      pts = poly.split(" ")
+      pts = poly[0].split(" ")
       newpts = []
       #indices in an vertdata start at 0, so we gotta subtract one from each index
       for p in pts:
@@ -35,7 +38,9 @@ def objToVertData(inputfile):
         else:
           newpts.append(str(int(p) - 1))
       count += 1
-      output += ",".join(newpts) + ";;Default;;FACE\n"
+      if "usemtl" in lines[poly[1]-1]:
+        mat = lines[poly[1]-1].split(" ")[1].strip()
+      output += ",".join(newpts) + ";;" + mat + ";;FACE\n"
 
   if len(uvinfo) > 0:
     output += "UV:Default:" + str(len(uvinfo)) + "\n"
