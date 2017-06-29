@@ -34,6 +34,7 @@ The following applications are supported:
 * 3DsMax 	: Vertices / Poyygons (Initial implementation provided as a starting point)
 * XSI   : Vertices / Polygons / WeightMaps / Morphs
 * ZBrush : Vertices / Polygons / UVs
+* Substance Painter : Vertices / Polygons / UVs
 * Mari : Vertices / Polygons / UVs (in beta)
 * Others	: Looking for contributors to write implementations for other 3d Apps (see TODO)
 
@@ -89,6 +90,14 @@ Copy the contents of the ZBrush folder in the download into the ZStartup/ZPlugs6
 So in the ZStartup/ZPlugs64 you should have the ODCopyPaste folder and also the zscript file.
 Currently only windows is supported, however, doing the same implementation for OSX shouldn't
 be hard.
+
+### Substance Painter
+
+Within Substance painter, under plugins, select get plugins folder.  Copy the contents of the
+SubstancePainter folder contained in this distribution into that folder.  You can then
+Reload the plugins in substance painter, which will give you a PasteExt button.  Only import
+is working, as exporting is irrelevant (there are no model changes within Painter).  Currently
+only windows is supported, however, doing the same implementation for OSX shouldn't be hard.
 
 # FAQ
 * How do I report an issue ?
