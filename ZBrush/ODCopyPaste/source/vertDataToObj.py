@@ -1,4 +1,4 @@
-#pyinstaller --distpath "C:\Users\Oliver\BitTorrent Sync\BTSync\_CODING\LW_Python\___WORK_IN_PROGRESS-EXPERIMENTS\ExternalCopyPaste\ODVertData_To_Obj.py" --noupx --onefile ODVertData_To_Obj.py
+#pyinstaller --distpath "C:\Users\Oliver\BitTorrent Sync\BTSync\_CODING\LW_Python\___WORK_IN_PROGRESS-EXPERIMENTS\ExternalCopyPaste\zbrush" --noupx --onefile vertDataToObj.py
 
 import tempfile, os, sys
 
@@ -32,32 +32,51 @@ def vertDataToObj(outputfile):
         x = map(float, lines[i].split())
         output += "v " + str(x[0]) + " " + str(x[1]) + " " + str(x[2]) + "\n"
 
-  #Set UV Map Values
   uvforobj = []
+  values = []
+  assignment = []
   for uvMap in uvMaps:
     count = 0
     for i in range(int(uvMap[0][1])):
       split = lines[uvMap[1]+1+count].split(":")
-      output += "vt " + str(float(split[0].split(" ")[0])) + " " + str(float(split[0].split(" ")[1])) + "\n"
+      if str(float(split[0].split(" ")[0])) + " " + str(float(split[0].split(" ")[1])) not in values:
+        values.append(str(float(split[0].split(" ")[0])) + " " + str(float(split[0].split(" ")[1])))
+      assignment.append(str(float(split[0].split(" ")[0])) + " " + str(float(split[0].split(" ")[1])))
       count +=1
+
+    values.sort()
+    for val in values:
+        output += "vt " + val + "\n"
 
   #create Polygons
   for polygons in polyline:
     polys = []
     count = 0
+    mat = ""
     for i in xrange(polygons[1] + 1, polygons[1] + polygons[0] + 1):
       pts = lines[i].split(";;")[0].split(",")
       newpts = []
       #indices in an obj start at 1, so we gotta add one to each index
-      for p in pts:
+      testpts = []
+      testidx = []
+      for p in range(len(pts)):
         if len(uvMaps) < 1:
-          newpts.append(str(int(p) + 1))
+          newpts.append(str(int(pts[p]) + 1))
         else:
-          newpts.append(str(int(p) + 1) + "/" + str(count+1))
+          testpts.append(str(int(pts[p])+1))
+          testidx.append(str(values.index(assignment[count])+1))
           count += 1
-      output += "g " + lines[i].split(";;")[1].strip() + "\n"
-      output += "usemtl " + lines[i].split(";;")[1].strip() + "\n"
-      output += "f " + " ".join(newpts) + "\n"
+      string = ""
+      for t in range(len(testpts)):
+        string += " " + testpts[t] + "/" + testidx[len(testpts)-1-t]
+      if lines[i].split(";;")[1].strip() != mat:
+        output += "g " + lines[i].split(";;")[1].strip() + "\n"
+        output += "usemtl " + lines[i].split(";;")[1].strip() + "\n"
+        mat = lines[i].split(";;")[1].strip()
+      if string != "":
+        output += "f " + string.strip() + "\n"
+      else:
+        output += "f " + " ".join(newpts) + "\n"
 
   #writing output file
   f = open(outputfile, "w")
