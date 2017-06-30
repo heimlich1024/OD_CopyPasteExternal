@@ -16,6 +16,7 @@ PainterPlugin {
 				alg.log.info("Component.onCompleted")
 			    //create a toolbar button
     			alg.ui.addToolBarWidget("paste.qml");
+    			alg.ui.addToolBarWidget("paste_udim.qml");
 		}
 
 		onTick: {
@@ -26,8 +27,6 @@ PainterPlugin {
 		onConfigure: {
 				// Do something when the user request the plugin configuration panel
 				alg.log.info("onConfigure")
-				alg.subprocess.check_call("\"" + alg.plugin_root_directory + "vertDataToObj.exe\"")
-				alg.project.create("file:/" + alg.plugin_root_directory + "1.obj")
 				//alg.log.info(alg.plugin_root_directory + "testingoliver")
 		}
 

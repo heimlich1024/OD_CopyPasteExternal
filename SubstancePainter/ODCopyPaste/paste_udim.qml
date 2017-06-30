@@ -7,7 +7,7 @@ Rectangle {
     id: saveButton
     width: 50
     height: 30
-    border.color: "white"
+    border.color: "yellow"
 
     /*set color based on if mouse is in mouseArea using Conditional (ternary) Operator
     since MouseArea doesn't enble hover, the color changes on click of the button */
@@ -16,7 +16,7 @@ Rectangle {
     Text {
         id: buttonLabel
         anchors.centerIn: parent
-        text: "PExtNml"
+        text: "PExtUDIM"
         color: "white"
     }
 
@@ -28,7 +28,7 @@ Rectangle {
 
         try{
         alg.subprocess.check_call("\"" + alg.plugin_root_directory + "vertDataToObj.exe\"")
-        alg.project.create("file:/" + alg.plugin_root_directory + "1.obj",[],[],{"splitMaterialsByUDIM":false})
+        alg.project.create("file:/" + alg.plugin_root_directory + "1.obj",[],[],{"splitMaterialsByUDIM":true})
 
         }catch (e){
             alg.log.error(e.message)
