@@ -27,9 +27,13 @@ Rectangle {
     onButtonClick: {
 
         try{
-        alg.subprocess.check_call("\"" + alg.plugin_root_directory + "vertDataToObj.exe\"")
-        alg.project.create("file:/" + alg.plugin_root_directory + "1.obj",[],[],{"splitMaterialsByUDIM":false})
-
+            if (Qt.platform.os == "windows")  {
+                alg.subprocess.check_call("\"" + alg.plugin_root_directory + "vertDataToObj.exe\"")
+                alg.project.create("file:/" + alg.plugin_root_directory + "1.obj",[],[],{"splitMaterialsByUDIM":false})
+            } else {
+                alg.subprocess.check_call("\"" + alg.plugin_root_directory + "vertDataToObj\"")
+                alg.project.create("file:/" + alg.plugin_root_directory + "1.obj",[],[],{"splitMaterialsByUDIM":false})
+            }
         }catch (e){
             alg.log.error(e.message)
         }
