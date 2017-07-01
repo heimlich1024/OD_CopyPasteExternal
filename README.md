@@ -88,8 +88,8 @@ Copy the contents of the paste script into the Ruby Console Window in Sketchup
 
 Copy the contents of the ZBrush folder in the download into the ZStartup/ZPlugs64 folder.
 So in the ZStartup/ZPlugs64 you should have the ODCopyPaste folder and also the zscript file.
-Currently only windows is supported, however, doing the same implementation for OSX shouldn't
-be hard.
+For x32 versions of windows, just drop the "64" from the folders above.
+For OSX versions, unzip the OSX Binaries into the same folder.
 
 ### Substance Painter
 
