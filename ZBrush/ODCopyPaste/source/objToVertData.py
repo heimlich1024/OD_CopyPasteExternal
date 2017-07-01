@@ -9,6 +9,7 @@ def objToVertData(inputfile):
   points = []
   polygons = []
   uvs = []
+  vertexnormals = []
   count = 0
   for line in lines:
     if line.startswith("v "):
@@ -17,6 +18,8 @@ def objToVertData(inputfile):
       polygons.append([line.strip()[2:], count])
     if line.startswith("vt "):
       uvs.append(line.strip()[2:])
+    if line.startswith("vn "):
+      vertexnormals.append(line.strip()[2:])
     count += 1
 
   output += "VERTICES:" + str(len(points)) + "\n"
@@ -46,6 +49,11 @@ def objToVertData(inputfile):
     output += "UV:Default:" + str(len(uvinfo)) + "\n"
     for info in uvinfo:
       output += uvs[info[1]-1][1:] + ":PLY:" + str(info[0]) + ":PNT:" + str(info[2]) + "\n"
+
+  if len(vertexnormals) > 0:
+    output += "VERTEXNORMALS:" + str(len(vertexnormals)) + "\n"
+    for normal in vertexnormals:
+      output += normal + "\n"
 
   #writing output file
   f = open(tempfile.gettempdir() + os.sep + "ODVertexData.txt", "w")
