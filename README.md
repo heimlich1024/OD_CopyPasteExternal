@@ -29,6 +29,7 @@ The following applications are supported:
 * Blender   : Vertices / Polygons (incl. Subpatch and SubD)/ WeightMaps / UVMaps / MorphMaps
 * Maya      : Vertices / Polygons / Weights (via Vertex Normals) (Implementation by Andre Hotz)
 * Houdini   : Vertices / Polygons / Weightmaps / VMaps
+* C4D : Vertices / Polygons / UVs
 * Rhino		: Vertices / Polygons (should be a good starting point for someone more experienced to finish it)
 * Sketchup  : Vertices / Polygons (Paste only for now - Initial implementation provided as starting point)
 * 3DsMax 	: Vertices / Poyygons (Initial implementation provided as a starting point)
@@ -98,6 +99,13 @@ SubstancePainter folder contained in this distribution into that folder.  You ca
 Reload the plugins in substance painter, which will give you a PasteExt button.  Only import
 is working, as exporting is irrelevant (there are no model changes within Painter).  Currently
 only windows is supported, however, doing the same implementation for OSX shouldn't be hard.
+
+### Maxon Cinema 4D
+
+Copy the plugins into the scripts folder and they should show up under the python menu. You
+might have to manually run them the first time.  This current implementation is a holdover
+until the proper C4D C implementation can be finished.  It currently only supports Points,
+Polygons and UV's and brings up the OBJ requester on "PasteFromExternal"
 
 # FAQ
 * How do I report an issue ?
