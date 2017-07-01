@@ -21,7 +21,8 @@ def vertDataToObj(outputfile):
     if line.startswith("VERTEXNORMALS:"):
       vtxnormals.append([int(line.strip().split(":")[1].strip()), count])
     if line.startswith("UV:"):
-      uvMaps.append([line.strip().split(":")[1:], count])  # changed this to add the # of uv coordinates into the mix
+      if line.strip().split(":")[1:][1] != "0":
+        uvMaps.append([line.strip().split(":")[1:], count])  # changed this to add the # of uv coordinates into the mix
     count += 1
 
   #write header
