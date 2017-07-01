@@ -9,13 +9,18 @@ def objToVertData(inputfile):
   points = []
   polygons = []
   uvs = []
+  vertexnormals = []
+  count = 0
   for line in lines:
     if line.startswith("v "):
       points.append(line.strip()[2:])
     if line.startswith("f "):
-      polygons.append(line.strip()[2:])
+      polygons.append([line.strip()[2:], count])
     if line.startswith("vt "):
       uvs.append(line.strip()[2:])
+    if line.startswith("vn "):
+      vertexnormals.append(line.strip()[2:])
+    count += 1
 
   output += "VERTICES:" + str(len(points)) + "\n"
   for p in points:
@@ -24,8 +29,9 @@ def objToVertData(inputfile):
   output += "POLYGONS:" + str(len(polygons)) + "\n"
   count = 0
   uvinfo = []
+  mat = "Default"
   for poly in polygons:
-      pts = poly.split(" ")
+      pts = poly[0].split(" ")
       newpts = []
       #indices in an vertdata start at 0, so we gotta subtract one from each index
       for p in pts:
@@ -35,12 +41,19 @@ def objToVertData(inputfile):
         else:
           newpts.append(str(int(p) - 1))
       count += 1
-      output += ",".join(newpts) + ";;Default;;FACE\n"
+      if "usemtl" in lines[poly[1]-1]:
+        mat = lines[poly[1]-1].split(" ")[1].strip()
+      output += ",".join(newpts) + ";;" + mat + ";;FACE\n"
 
   if len(uvinfo) > 0:
     output += "UV:Default:" + str(len(uvinfo)) + "\n"
     for info in uvinfo:
       output += uvs[info[1]-1][1:] + ":PLY:" + str(info[0]) + ":PNT:" + str(info[2]) + "\n"
+
+  if len(vertexnormals) > 0:
+    output += "VERTEXNORMALS:" + str(len(vertexnormals)) + "\n"
+    for normal in vertexnormals:
+      output += normal + "\n"
 
   #writing output file
   f = open(tempfile.gettempdir() + os.sep + "ODVertexData.txt", "w")

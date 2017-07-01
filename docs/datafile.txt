@@ -1,8 +1,8 @@
 # Fileformat Description that gets written as temporary file:
 
-VERTICES:#number of vertices
+VERTICES:#number of vertices(points)
 x y z (of each vertex)
-POLYGONS:
+POLYGONS:#number of polygons
 comma separate list of each vertid in the polygon;;materialname;;polytype (which can be FACE, SubD, or CCSS)
 WEIGHT:name of weightmap
 weight of vertice (in same order as VERTICES)
@@ -11,6 +11,8 @@ deltax deltay deltaz
 UV:name of uvmap:number of uv coordinates
 u v:polyid:pntid (for discontinuous UVs) or
 u v:pntid        (for continuous UVs)
+VERTEXNORMALS:# of vertexnormals
+x y z (for each normal)
 
 Example data format for a box:
 
