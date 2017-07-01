@@ -43,11 +43,31 @@ class OD_LWCopyToExternal(lwsdk.ICommandSequence):
   # LWCommandSequence -----------------------------------
   def process(self, mod_command):
 
+    def polytree(polys, points):
+      #here we build a tree on which polys belong to a point.
+      #n will store the polyIDs assignement per point
+      #nfullNormals will add the poly normals together for that point from the belonging polys
+      n = []
+      nfullNormals = []
+      #create empty arrays
+      for p in points:
+       n.append([])
+       nfullNormals.append([])
+      #go through each poly checking with points belong to it.
+      count = 0
+      for poly in polys:
+        pts = mesh_edit_op.polyPoints(mesh_edit_op.state,poly)
+        for p in pts:
+          n[self.pointidxmap[str(p)]].append(count)
+          nfullNormals[self.pointidxmap[str(p)]] = lwsdk.Vector(nfullNormals[self.pointidxmap[str(p)]]) + lwsdk.Vector(mesh_edit_op.polyNormal(mesh_edit_op.state,polys[count])[1])
+        count += 1
+      return n, nfullNormals
+
     #deselect any Morph Targets
     command = mod_command.lookup(mod_command.data, "SELECTVMAP")
     cs_options = lwsdk.marshall_dynavalues(("MORF"))
     result = mod_command.execute(mod_command.data, command, cs_options, lwsdk.OPSEL_USER)
-
+    #The temporary filename where it resides, typically this is the systems temp folder as it will resolve to the same on every system
     file = tempfile.gettempdir() + os.sep + "ODVertexData.txt"
 
     #find existing Vmaps
@@ -59,13 +79,14 @@ class OD_LWCopyToExternal(lwsdk.ICommandSequence):
     for u in range(0, lwsdk.LWObjectFuncs().numVMaps( lwsdk.LWVMAP_MORF )):
       loaded_morph.append(lwsdk.LWObjectFuncs().vmapName(lwsdk.LWVMAP_MORF, u))
 
+    #start mesh edit operations
     mesh_edit_op = mod_command.editBegin(0, 0, lwsdk.OPLYR_FG)
     if not mesh_edit_op:
       print >>sys.stderr, 'Failed to engage mesh edit operations!'
       return lwsdk.AFUNC_OK
 
     try:
-      # Getting Point ID of selected Point
+      # Query all points
       points = []
       edit_op_result = mesh_edit_op.fastPointScan(mesh_edit_op.state, self.fast_point_scan, (points,), lwsdk.OPLYR_FG, 0)
       if edit_op_result != lwsdk.EDERR_NONE:
@@ -74,7 +95,7 @@ class OD_LWCopyToExternal(lwsdk.ICommandSequence):
       point_count = len(points)
       edit_op_result = lwsdk.EDERR_NONE
 
-
+      # Query all polygons
       polys = []
       edit_op_result = mesh_edit_op.fastPolyScan(mesh_edit_op.state, self.fast_poly_scan, (polys,), lwsdk.OPLYR_FG, 0)
       if edit_op_result != lwsdk.EDERR_NONE:
@@ -88,25 +109,51 @@ class OD_LWCopyToExternal(lwsdk.ICommandSequence):
         lwsdk.LWMessageFuncs().info("No Points.", "")
         return lwsdk.AFUNC_OK
 
-      f = open(file, "w")
-      f.write ("VERTICES:" + str(point_count) + "\n")
-
+      #initializing some variables we'll need
       positions = []
       uvMaps = []
       weightMaps = []
       morphMaps = []
-      # Filling Position Array for Selected Point
+      vertexNormals = []
+
+      #open the file and start writing points header and point positions
+      f = open(file, "w")
+      f.write ("VERTICES:" + str(point_count) + "\n")
+
+      # Writing point positions for each point
       for point in points:
         pos = mesh_edit_op.pointPos(mesh_edit_op.state, point)
         f.write(str(pos[0]) + " " + str(pos[1]) + " " + str(pos[2]*-1) + "\n")
-      #write polygons-point connection for poly reconstruction
+
+      #check to see if any surfaces have smoothing on:
+      smoothing = 0
+      surfIDs = lwsdk.LWSurfaceFuncs().byObject(lwsdk.LWStateQueryFuncs().object())
+      for surf in surfIDs:
+        smooth = lwsdk.LWSurfaceFuncs().getFlt(surf, lwsdk.SURF_SMAN)
+        if smooth > 0:
+          smoothing = 1
+          break
+
+      #Query which polygons belong to a point and build an array for easy lookup (only needed if there's any smoothing)
+      if smoothing > 0:
+        ptree = polytree(polys, points)
+
+      #write Polygon Header
       f.write("POLYGONS:" + str(len(polys)) + "\n")
       x =0
       for poly in polys:
+        #check if the surface of a poly has smoothing enabled or not so that we either export smoothed or nonsmoothed normals
         surf = mesh_edit_op.polySurface(mesh_edit_op.state,poly)
+        surfID = lwsdk.LWSurfaceFuncs().byName(surf, lwsdk.LWStateQueryFuncs().object())
+        smoothing = lwsdk.LWSurfaceFuncs().getFlt(surfID[0], lwsdk.SURF_SMAN)
+        #Write poly construction with surface name and type, as well as storing the normals
         ppoint = ""
         for point in reversed(mesh_edit_op.polyPoints(mesh_edit_op.state,poly)):
           ppoint += "," + str(self.pointidxmap[str(point)])
+          if smoothing > 0:
+            vertexNormals.append(lwsdk.Vector().normalize(ptree[1][self.pointidxmap[str(point)]]/float(len(ptree[0]))))
+          else:
+            vertexNormals.append(mesh_edit_op.polyNormal(mesh_edit_op.state,poly)[1])
         polytype = "FACE"
         subD = mesh_edit_op.polyType(mesh_edit_op.state, poly)# & lwsdk.LWPOLTYPE_SUBD
         if subD == lwsdk.LWPOLTYPE_SUBD:
@@ -146,7 +193,7 @@ class OD_LWCopyToExternal(lwsdk.ICommandSequence):
                 curPos = [mesh_edit_op.pointVGet(mesh_edit_op.state,point)[1][0], mesh_edit_op.pointVGet(mesh_edit_op.state, point)[1][1]]
                 cont.append([curPos, str(self.pointidxmap[str(point)])])
                 c+= 1
-
+        #Write UVs
         f.write("UV:" + uvs + ":"+str(c) + "\n")
         for uvpos in discont:
           f.write(str(uvpos[0][0]) + " " + str(uvpos[0][1]) + ":PLY:" + str(uvpos[1]) + ":PNT:" + str(uvpos[2]) + "\n")
@@ -163,6 +210,12 @@ class OD_LWCopyToExternal(lwsdk.ICommandSequence):
             f.write(str(ms[0]) + " " + str(ms[1]) + " " + str(ms[2]*-1) + "\n")
           else:
             f.write("0 0 0\n")
+
+      #Write Vertex Normals
+      f.write("VERTEXNORMALS:" + str(len(vertexNormals)) + "\n")
+      for normal in vertexNormals:
+        f.write(str(normal[0]) + " " + str(normal[1]) + " " + str(normal[2]*-1) + "\n")
+
     except:
       edit_op_result = lwsdk.EDERR_USERABORT
       raise
