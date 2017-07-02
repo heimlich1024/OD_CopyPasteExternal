@@ -34,6 +34,7 @@ The following applications are supported:
 * Sketchup  : Vertices / Polygons (Paste only for now - Initial implementation provided as starting point)
 * 3DsMax 	: Vertices / Poyygons (Initial implementation provided as a starting point)
 * XSI   : Vertices / Polygons / WeightMaps / Morphs
+* Moi3D : Vertices / Polygons
 * ZBrush : Vertices / Polygons / UVs
 * Substance Painter : Vertices / Polygons / UVs
 * Mari : Vertices / Polygons / UVs (in beta)
@@ -107,6 +108,16 @@ might have to manually run them the first time.  This current implementation is 
 until the proper C4D C implementation can be finished.  It currently only supports Points,
 Polygons and UV's and brings up the OBJ requester on "PasteFromExternal"
 
+### Moi 3D
+
+Copy the contents of the Moi3D folder into the commands folder of your Moi Installation.
+You can then call the scripts via hotkeys, or the external script manager if you have it.
+
+### XSI
+
+Open the script editor within XSI and load the script, make a new shelf, and then drag the
+script to the shelf, and setup a button.  Do that for both copy/paste scripts
+
 # FAQ
 * How do I report an issue ?
 
@@ -156,7 +167,7 @@ alt="3DSMax-Blender Usage" width="240" height="180" border="10" /></a>
 
 * Houdini:  figure out how to get Morphs/Blendshapes integrated
 * Maya:     figure out how to get Morphs/Blendshapes integrated
-* Cinema4d: Implementation
+* Cinema4d: C Implementation (currently only python (vertices,polys,uvs supported))
 * 3DsMax:   Initial Implementation as sample is complete
 * Sketchup: Add Copy To and finesse Paste implementation
 * Unreal:   R&D to see if its possible to implement
