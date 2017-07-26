@@ -37,6 +37,7 @@ The following applications are supported:
 * Moi3D : Vertices / Polygons
 * ZBrush : Vertices / Polygons / UVs
 * Substance Painter : Vertices / Polygons / UVs
+* 3D-Coat: Vertices / Polygons / UVs
 * Mari : Vertices / Polygons / UVs (in beta)
 * Others	: Looking for contributors to write implementations for other 3d Apps (see TODO)
 
@@ -100,6 +101,15 @@ SubstancePainter folder contained in this distribution into that folder.  You ca
 Reload the plugins in substance painter, which will give you a PasteExt button.  Only import
 is working, as exporting is irrelevant (there are no model changes within Painter).  Currently
 only windows is supported, however, doing the same implementation for OSX shouldn't be hard.
+
+### 3D-Coat (Windows Only)
+
+To Install, copy these files into the scripts folder in your 3dCoat documents folder.
+Here, it is C:\Users\username\Documents\3D-CoatV47\Scripts.  Should you not have a
+Scripts folder there, just copy the entire folder, otherwise, make a folder, in put the
+files in there.
+In 3DCoat, under the scripts tab, select Run Script, and select the two .txt files contained
+here.  From that point on, they'll show up under the Script Menu and you can use them as is.
 
 ### Maxon Cinema 4D
 
