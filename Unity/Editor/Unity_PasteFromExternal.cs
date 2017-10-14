@@ -14,7 +14,7 @@ namespace Parabox.OD
 			return mat;
 		}
 
-		[MenuItem("Assets/Paste From External to Scene &d")]
+		[MenuItem("Assets/Paste From External to Scene &w")]
 		public static void Import()
 		{
 			Mesh m = OD_File.Import("Assets/ODVertexDataNGon.txt");
