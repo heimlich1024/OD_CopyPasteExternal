@@ -18,7 +18,7 @@ namespace Parabox.OD
 			return mat;
 		}
 
-		[MenuItem("Edit/Paste From External to Scene %#v")]
+		[MenuItem("Edit/Paste Mesh from External %#v")]
 		private static void Import()
 		{
 			Mesh m = ODImportExport.Import(ODImportExport.GetTempFile());
@@ -28,7 +28,7 @@ namespace Parabox.OD
 			go.AddComponent<MeshRenderer>().sharedMaterial = DefaultMaterial();
 		}
 
-		[MenuItem("Edit/Copy To External %#c")]
+		[MenuItem("Edit/Copy Mesh To External %#c")]
 		private static void Export()
 		{
 			GameObject first = Selection.gameObjects.FirstOrDefault(x => x.GetComponent<MeshFilter>() != null);
