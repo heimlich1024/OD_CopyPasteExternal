@@ -2,17 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 using System.IO;
+using UnityEditor;
 using UnityEngine;
 
 namespace Parabox.OD
 {
 	/**
-	 *	OD temp file import & export.
+	 * OD temp file import & export.
 	 */
 	public static class OD_File
 	{
 		/**
-		 *	@todo
+		 * todo documentation
 		 */
 		public enum MeshAttribute
 		{
@@ -38,7 +39,6 @@ namespace Parabox.OD
 		public static Mesh Import(string path)
 		{
 			MeshAttribute attrib = MeshAttribute.Null;
-
 			List<Vector3> positions = new List<Vector3>();
 			List<int> polygons = new List<int>();
 
@@ -59,6 +59,9 @@ namespace Parabox.OD
 			Mesh m = new Mesh();
 			m.vertices = positions.ToArray();
 			m.triangles = polygons.ToArray();
+			m.RecalculateNormals();
+			m.RecalculateTangents();
+			m.RecalculateBounds();
 
 			return m;
 		}
@@ -106,30 +109,27 @@ namespace Parabox.OD
 
 			try
 			{
-				// comma separate list of each vertid in the polygon;;materialname;;polytype
+				// Comma separated list of each vertid in the polygon;;materialname;;polytype.
 				// (which can be FACE, SubD, or CCSS)
 				// 0,1,2,3;;Default;;FACE
+				//
+				// For now Unity paste only supports PolyType Face
 				string[] split = line.Split(POLYGON_SEPARATOR, StringSplitOptions.RemoveEmptyEntries);
 
 				if(split[2].Equals("FACE"))
 				{
 					string[] face = split[0].Split(',');
+					int[] indices = new int[face.Length];
 
-					for(int i = 0; i < face.Length; i += 2)
-					{
-						int a, b, c;
-						int.TryParse(face[i+0], out a);
-						int.TryParse(face[i+1], out b);
-						int.TryParse(face[(i+2) % face.Length], out c);
+					for(int i = 0; i < face.Length; i++)
+						int.TryParse(face[i], out indices[i]);
 
-						polygons.Add(a);
-						polygons.Add(b);
-						polygons.Add(c);
-					}
+					polygons.AddRange( MeshUtility.TriangulatePolygon(indices) );
 				}
 			}
-			catch
+			catch(Exception e)
 			{
+				Debug.LogError(e.ToString());
 				return false;
 			}
 
