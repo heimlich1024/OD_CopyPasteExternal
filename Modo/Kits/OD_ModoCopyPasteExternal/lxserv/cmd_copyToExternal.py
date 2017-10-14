@@ -1,13 +1,12 @@
-
 ################################################################################
 #
-# scriptname.py
+# cmd_copyToExternal.py
 #
-# Version:
+# Version: 0.99
 #
-# Author:
+# Author: Oliver Hotz
 #
-# Description:
+# Description: Copies Geo/Weights/Morphs/UV's to External File
 #
 # Last Update:
 #
@@ -38,6 +37,7 @@ class OD_CopyToExternal(lxu.command.BasicCommand):
 
 
       fusion = 0
+      replicator = 0
       selmeshes = scene.selected
       if selmeshes[0].type == "mesh":
           selmeshes = selmeshes
@@ -51,6 +51,20 @@ class OD_CopyToExternal(lxu.command.BasicCommand):
           scene.select(selmeshes[0])
           #convert original meshfusion item to mesh, as we cannot convert the duplicate - creates empty item on duplicate
           lx.eval('item.setType mesh sdf.item')
+          selmeshes = scene.selected
+      elif selmeshes[0].type == "replicator":
+          replicator = 1
+          itemname = selmeshes[0].name
+          lx.eval('item.duplicate false locator false true')
+          new = scene.selected
+          #freeze Replicators
+          lx.eval('replicator.freeze')
+          #select whole Hierarchy
+          scene.select(new[0].name + " (2)")
+          lx.eval('select.itemHierarchy')
+          #convert to mesh
+          lx.eval('item.setType mesh locator')
+          lx.eval('layer.mergeMeshes true')
           selmeshes = scene.selected
 
       if len(selmeshes) > 0:
@@ -125,7 +139,7 @@ class OD_CopyToExternal(lxu.command.BasicCommand):
       else:
         modo.dialogs.alert("No Mesh Selected", "You need to select the mesh Item you want to copy", "info")
 
-      if fusion == 1:
+      if fusion == 1 or replicator == 1:
           #delete converted item
           scene.removeItems(scene.selected[0])
           #select the duplicated meshfusion item

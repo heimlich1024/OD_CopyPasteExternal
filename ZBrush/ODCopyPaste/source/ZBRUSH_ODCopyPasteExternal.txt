@@ -1,0 +1,103 @@
+// CopyPasteToFromExternal.txt  - Oliver Hotz 2017
+// Groups disabled on save
+// buttons located in Zplugin:Misc Utilities submenu
+
+[IConfig, 3.1 ]
+[IShowActions, 0]
+
+[VarDef,dllPath,"ZBRUSH_ZSTARTUP\ZPlugs64\ODCopyPaste\ZFileUtils64.dll"]
+[VarDef,Object1,"ZBRUSH_ZSTARTUP\ZPlugs64\ODCopyPaste\1.OBJ"]
+[VarDef,importAppPath,"ZBRUSH_ZSTARTUP\ZPlugs64\ODCopyPaste\vertDataToObj.exe"]
+[VarDef,exportAppPath,"ZBRUSH_ZSTARTUP\ZPlugs64\ODCopyPaste\objToVertData.exe"]
+
+[RoutineDef, CheckSystem, [VarSet,Zvers,[ZBrushInfo,0]]
+	[If,[Val,Zvers] >= 4.7,,
+    	[Note,"\Cff9923This zscript\Cffffff is not designed for this version of \Cff9923ZBrush\Cffffff.",,3,4737096,,300]
+    	[Exit]
+  	]
+ 	[VarSet,isMac, [ZBrushInfo,6]]	//check Mac or PC
+ 	// Make sure we have the dll and set its path
+	[If,[ZBrushInfo,16]==64,//64 bit
+	  	[If,isMac,
+	   		//use the path below for testing only
+	   		//Mac library file is combined 32 bit & 64 bit
+	   		[VarSet,dllPath,"ZBRUSH_ZSTARTUP/ZPlugs64/ODCopyPaste/ZFileUtils.lib"]
+	   		[VarSet,Object1,"ZBRUSH_ZSTARTUP/ZPlugs64/ODCopyPaste/1.OBJ"]
+		   	[VarSet,importAppPath,"ZBRUSH_ZSTARTUP/ZPlugs64/ODCopyPaste/vertDataToObj"]
+	   		[VarSet,exportAppPath,"ZBRUSH_ZSTARTUP/ZPlugs64/ODCopyPaste/objToVertData"]
+  		,
+		   	//use the path below for testing only
+	   		[VarSet,dllPath,"ZBRUSH_ZSTARTUP\ZPlugs64\ODCopyPaste\ZFileUtils64.dll"]
+	   		[VarSet,Object1,"ZBRUSH_ZSTARTUP\ZPlugs64\ODCopyPaste\1.OBJ"]
+	   		[VarSet,importAppPath,"ZBRUSH_ZSTARTUP\ZPlugs64\ODCopyPaste\vertDataToObj.exe"]
+	   		[VarSet,exportAppPath,"ZBRUSH_ZSTARTUP\ZPlugs64\ODCopyPaste\objToVertData.exe"]
+  		]
+	,//else 32 bit
+  		[If,isMac,
+    		//use the path below for testing only
+	    	//Mac library file is combined 32 bit & 64 bit
+    		[VarSet,dllPath,"ZBRUSH_ZSTARTUP/ZPlugs/ODCopyPaste/ZFileUtils.lib"]
+			[VarSet,Object1,"ZBRUSH_ZSTARTUP/ZPlugs/ODCopyPaste/1.OBJ"]
+    		[VarSet,importAppPath,"ZBRUSH_ZSTARTUP/ZPlugs/ODCopyPaste/vertDataToObj"]
+    		[VarSet,exportAppPath,"ZBRUSH_ZSTARTUP/ZPlugs/ODCopyPaste/objToVertData"]
+  		,
+    		//use the path below for testing only
+    		[VarSet,dllPath,"ZBRUSH_ZSTARTUP\ZPlugs\ODCopyPaste\ZFileUtils.dll"]
+			[VarSet,Object1,"ZBRUSH_ZSTARTUP\ZPlugs\ODCopyPaste\1.OBJ"]
+    		[VarSet,importAppPath,"ZBRUSH_ZSTARTUP\ZPlugs\ODCopyPaste\vertDataToObj.exe"]
+    		[VarSet,exportAppPath,"ZBRUSH_ZSTARTUP\ZPlugs\ODCopyPaste\objToVertData.exe"]
+  		]
+	]
+	[If, [FileExists, [Var,dllPath]],
+	  	//check that correct version
+	  	[VarSet, dllVersion, [FileExecute, [Var,dllPath], Version]]
+	  	[If, [Val,dllVersion] >= 3.0,//dll version
+	    	//OK
+  		,//else earlier version
+	    	[Note,"\Cff9923Note :\Cc0c0c0 The \Cff9923 ZFileUtils plugin \CffffffDLL\Cc0c0c0 is an earlier version which does not support this plugin.  Please install //correct version."]
+			[Exit]
+  		]
+	, // else no DLL.
+  		[Note,"\Cff9923Note :\Cc0c0c0 The \Cff9923 ZFileUtils plugin \CffffffDLL\Cc0c0c0 could not be found at the correct location.  Please re-install the plugin, making //sure the relevant files and folders are in the \CffffffZStartup/ZPlugs\Cc0c0c0 folder."]
+  		[Exit]
+	]
+]//end routine
+
+[VarSet,importAppPath,[FileNameResolvePath, importAppPath]]
+[VarSet,exportAppPath,[FileNameResolvePath, exportAppPath]]
+
+
+[IButton,"TOOL:  CopyToExt","Exporting...",
+
+	[If, [IGet, TRANSFORM:Edit] == 1,
+		[ISet, TOOL:Export:Grp, 0 ]
+		[FileNameSetNext, Object1 ]
+		[IKeyPress, 13, [IPress, TOOL:Export:Export ] ]
+
+	  	[VarSet, err, [FileExecute,[Var,dllPath],"LaunchAppWithFile", exportAppPath]] // exporting as obj, then convert to vertdata...
+	  	[If,err,
+	   		[Note,"An error occurred.",,2]
+	  	,//else OK
+	   		[Note,"File Exported",,2]
+	  	]
+	, // else
+		[Note, "No model in edit mode...", , 2 ]
+	]
+]
+
+[IButton,"TOOL:  PasteFromExt","Importing...",
+
+  	[VarSet, err, [FileExecute,[Var,dllPath],"LaunchAppWithFile", importAppPath]] // convert vertdata to obj, then import into zbrush...
+  	[If,err,
+   		[Note,"An error occurred.",,2]
+  	,//else OK
+   		[Note,"File imported",,2]
+  	]
+	[If, [FileExists, Object1 ] == 1,
+		[FileNameSetNext, Object1 ]
+		[IKeyPress, 13, [IPress, TOOL:Import:Import ] ]
+		[Note, "Model Imported...", , 2 ]
+	, // else
+		[Note, "Sorry, Source does not exist...", , 2 ]
+	]
+]

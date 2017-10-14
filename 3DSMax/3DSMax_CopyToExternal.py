@@ -5,7 +5,7 @@
 # example:                                                                    #
 # python.ExecuteFile "C:\Users\Oliver\Desktop\3DSMax_CopyToExternal.py"       #
 ###############################################################################
-
+# encoding: utf-8
 import MaxPlus, tempfile, os
 
 def writeODMesh(mesh):

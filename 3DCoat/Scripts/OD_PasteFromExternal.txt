@@ -1,0 +1,38 @@
+//this is callback for dialog that asks if user needs to save scene after New command
+void ModalDialogCallbackDontSave(){
+	cmd("$DialogButton#2");/*press Don't save - second button*/
+}
+//this is callback to press OK when user is asked to keep scale or not
+void ModalDialogCallbackOk(){
+	cmd("$DialogButton#1");/*press OK*/
+}
+
+void main(){
+	//This function will call void ForAnyFile(string &in FileName) for each file in user defined folder - stl and obj are just for example
+
+	//////////////////////////////////////////////////////////////////////////////
+	// CHANGE THIS PATH IF IT IS DIFFERENT TO YOUR DOCUMENTS/3D-COATV47/SCRIPTS //
+    //////////////////////////////////////////////////////////////////////////////
+
+	string instPath = installPath();
+	string userFolder = homePath();
+	string scriptPath = rwPath(userFolder) + "/3D-CoatV47/Scripts";
+	string exe  = scriptPath + "/vertDataToObj.exe";
+	string args = "";
+	Execute(exe, args);
+	ForAnyFile(scriptPath + "/1.obj");
+}
+
+void ForAnyFile(string &in FileName){
+	//During the New command 3D-Coat will ask what to do with the scene - save or not, this dialog intended to skip it
+	SetModalDialogCallback("ModalDialogCallbackDontSave");
+	cmd("$CLEARSCENE");/*New*/
+	//Substitute filename for the next file dialog
+	SetFileForFileDialogs(FileName);
+	//Import model for per pixel painting
+	SetModalDialogCallback("ModalDialogCallbackOk");
+	ppp(FileName);
+	//go to uv room
+	uv();
+	SetFileForFileDialogs("");
+}

@@ -156,7 +156,7 @@ class OD_LWCopyToExternal(lwsdk.ICommandSequence):
         for point in points:
           if (mesh_edit_op.pointVGet(mesh_edit_op.state,point)[1]) != None:
             ms = mesh_edit_op.pointVGet(mesh_edit_op.state,point)[1]
-            f.write(str(ms[0]) + " " + str(ms[1]) + " " + str(ms[2]) + "\n")
+            f.write(str(ms[0]) + " " + str(ms[1]) + " " + str(ms[2]*-1) + "\n")
           else:
             f.write("None\n")
     except:

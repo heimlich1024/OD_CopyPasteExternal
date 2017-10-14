@@ -29,9 +29,16 @@ The following applications are supported:
 * Blender   : Vertices / Polygons (incl. Subpatch and SubD)/ WeightMaps / UVMaps / MorphMaps
 * Maya      : Vertices / Polygons / Weights (via Vertex Normals) (Implementation by Andre Hotz)
 * Houdini   : Vertices / Polygons / Weightmaps / VMaps
+* C4D : Vertices / Polygons / UVs
 * Rhino		: Vertices / Polygons (should be a good starting point for someone more experienced to finish it)
 * Sketchup  : Vertices / Polygons (Paste only for now - Initial implementation provided as starting point)
 * 3DsMax 	: Vertices / Poyygons (Initial implementation provided as a starting point)
+* XSI   : Vertices / Polygons / WeightMaps / Morphs
+* Moi3D : Vertices / Polygons
+* ZBrush : Vertices / Polygons / UVs
+* Substance Painter : Vertices / Polygons / UVs
+* 3D-Coat: Vertices / Polygons / UVs
+* Mari : Vertices / Polygons / UVs (in beta)
 * Others	: Looking for contributors to write implementations for other 3d Apps (see TODO)
 
 # Installation:
@@ -79,6 +86,47 @@ Preliminary Paste script to be called from the Max Script Editor (see .py for in
 ### Sketchup
 
 Copy the contents of the paste script into the Ruby Console Window in Sketchup
+
+### ZBrush
+
+Copy the contents of the ZBrush folder in the download into the ZStartup/ZPlugs64 folder.
+So in the ZStartup/ZPlugs64 you should have the ODCopyPaste folder and also the zscript file.
+For x32 versions of windows, just drop the "64" from the folders above.
+For OSX versions, unzip the OSX Binaries into the same folder.
+
+### Substance Painter
+
+Within Substance painter, under plugins, select get plugins folder.  Copy the contents of the
+SubstancePainter folder contained in this distribution into that folder.  You can then
+Reload the plugins in substance painter, which will give you a PasteExt button.  Only import
+is working, as exporting is irrelevant (there are no model changes within Painter).  Currently
+only windows is supported, however, doing the same implementation for OSX shouldn't be hard.
+
+### 3D-Coat (Windows Only)
+
+To Install, copy these files into the scripts folder in your 3dCoat documents folder.
+Here, it is C:\Users\username\Documents\3D-CoatV47\Scripts.  Should you not have a
+Scripts folder there, just copy the entire folder, otherwise, make a folder, in put the
+files in there.
+In 3DCoat, under the scripts tab, select Run Script, and select the two .txt files contained
+here.  From that point on, they'll show up under the Script Menu and you can use them as is.
+
+### Maxon Cinema 4D
+
+Copy the plugins into the scripts folder and they should show up under the python menu. You
+might have to manually run them the first time.  This current implementation is a holdover
+until the proper C4D C implementation can be finished.  It currently only supports Points,
+Polygons and UV's and brings up the OBJ requester on "PasteFromExternal"
+
+### Moi 3D
+
+Copy the contents of the Moi3D folder into the commands folder of your Moi Installation.
+You can then call the scripts via hotkeys, or the external script manager if you have it.
+
+### XSI
+
+Open the script editor within XSI and load the script, make a new shelf, and then drag the
+script to the shelf, and setup a button.  Do that for both copy/paste scripts
 
 # FAQ
 * How do I report an issue ?
@@ -129,10 +177,10 @@ alt="3DSMax-Blender Usage" width="240" height="180" border="10" /></a>
 
 * Houdini:  figure out how to get Morphs/Blendshapes integrated
 * Maya:     figure out how to get Morphs/Blendshapes integrated
-* Cinema4d: Implementation
-* 3DsMax:   Implementation
-* XSI:	    Implementation
+* Cinema4d: C Implementation (currently only python (vertices,polys,uvs supported))
+* 3DsMax:   Initial Implementation as sample is complete
 * Sketchup: Add Copy To and finesse Paste implementation
-* ZBrush:   Implementation
 * Unreal:   R&D to see if its possible to implement
 * Unity:    R&D to see if its possible to implement
+* Mari:    R&D to see if its possible to implement
+* Nuke:    R&D to see if its possible to implement

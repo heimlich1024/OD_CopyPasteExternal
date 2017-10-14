@@ -1,0 +1,27 @@
+void main() {
+
+	//////////////////////////////////////////////////////////////////////////////
+	// CHANGE THIS PATH IF IT IS DIFFERENT TO YOUR DOCUMENTS/3D-COATV47/SCRIPTS //
+    //////////////////////////////////////////////////////////////////////////////
+
+	string instPath = installPath();
+	string userFolder = homePath();
+	string scriptPath = rwPath(userFolder) + "/3D-CoatV47/Scripts";
+
+    SetFileForFileDialogs("Scripts/1.obj");
+    SetModalDialogCallback( "callback" );
+
+    cmd( "$ApplyUV" );
+    cmd( "$EXPORTUV" );
+    cmd( "$ExportObject" );
+
+	string exe  = scriptPath + "/objToVertData.exe";
+	string args = "";
+	Execute(exe, args);
+}
+
+void callback(){
+    cmd( "$DialogButton#1" );
+    UI  ui;
+    ui( "OK" );
+}
