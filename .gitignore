@@ -98,3 +98,4 @@ Unity/Assets/Plugins*
 Unity/obj
 Unity/*.sln
 Unity/*.csproj
+Unity/.idea

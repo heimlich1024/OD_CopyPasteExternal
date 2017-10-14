@@ -1,15 +1,16 @@
 using UnityEngine;
 using UnityEditor;
 using System.IO;
+using System.Linq;
 
 namespace Parabox.OD
 {
 	/**
 	 * Editor functionality for copy / paste from external.
 	 */
-	internal static class Unity_PasteFromExternalPaste
+	internal static class CopyPasteExternal
 	{
-		public static Material DefaultMaterial()
+		private static Material DefaultMaterial()
 		{
 			GameObject go = GameObject.CreatePrimitive(PrimitiveType.Cube);
 			Material mat = go.GetComponent<MeshRenderer>().sharedMaterial;
@@ -18,14 +19,24 @@ namespace Parabox.OD
 		}
 
 		[MenuItem("Edit/Paste From External to Scene %#v")]
-		public static void Import()
+		private static void Import()
 		{
-			Mesh m = OD_File.Import(OD_File.GetTempFile());
+			Mesh m = ODImportExport.Import(ODImportExport.GetTempFile());
 
 			GameObject go = new GameObject();
 			go.AddComponent<MeshFilter>().sharedMesh = m;
 			go.AddComponent<MeshRenderer>().sharedMaterial = DefaultMaterial();
+		}
 
+		[MenuItem("Edit/Copy To External %#c")]
+		private static void Export()
+		{
+			GameObject first = Selection.gameObjects.FirstOrDefault(x => x.GetComponent<MeshFilter>() != null);
+
+			if(first != null)
+				ODImportExport.Export(
+					first.GetComponent<MeshFilter>().sharedMesh,
+					first.GetComponent<MeshRenderer>().sharedMaterials);
 		}
 	}
 }
