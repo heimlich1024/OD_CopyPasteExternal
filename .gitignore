@@ -87,3 +87,15 @@ ENV/
 
 # Rope project settings
 .ropeproject
+
+# unity project generated files
+Unity/Library
+Unity/ProjectSettings
+Unity/Temp
+Unity/Packages
+Unity/Assets/Debug*
+Unity/Assets/Plugins*
+Unity/obj
+Unity/*.sln
+Unity/*.csproj
+Unity/.idea
