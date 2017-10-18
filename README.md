@@ -38,6 +38,7 @@ The following applications are supported:
 * ZBrush : Vertices / Polygons / UVs
 * Substance Painter : Vertices / Polygons / UVs
 * 3D-Coat: Vertices / Polygons / UVs
+* Unity: Vertices/ Polygons
 * Mari : Vertices / Polygons / UVs (in beta)
 * Others	: Looking for contributors to write implementations for other 3d Apps (see TODO)
 
@@ -127,6 +128,19 @@ You can then call the scripts via hotkeys, or the external script manager if you
 
 Open the script editor within XSI and load the script, make a new shelf, and then drag the
 script to the shelf, and setup a button.  Do that for both copy/paste scripts
+
+### UNITY
+
+Two new menu items are added:
+
+[MenuItem("Edit/Paste Mesh from External %#v")]
+[MenuItem("Edit/Copy Mesh To External %#c")]
+
+Deleting pasted meshes will leak in editor (but adding a DestroyImmediate will break Undo...). A fix probably means creating meshes as project assets instead of scene instances.
+At the moment meshes are assumed to be in left handed coordinates. Export has a way to change this, but import does not.
+Multiple meshes aren't exported, only the first selected. In the future it would be nice to merge multiple meshes.
+Materials, bone weights, UVs, and morph targets aren't imported.
+Import always triangulates meshes. Unity does support Quads, so it would be nice to keep that topology where possible.
 
 # FAQ
 * How do I report an issue ?
