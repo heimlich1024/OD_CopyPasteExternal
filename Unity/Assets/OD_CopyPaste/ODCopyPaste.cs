@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System;
 using System.IO;
 using UnityEngine;
+
 /**
  * todo
- * 	- deleting pasted meshes will leak in editor (but adding a DestroyImmediate will break Undo...)
- *  - easier way to enable/disable handedness swapping
- * 	- handle multiple selected meshes (by merging to a single mesh w/ transforms applied)
- * 	- support importing materials, bone weights, uvs
- * 	- keep submeshes imported as quads in quad topology
+ *	- deleting pasted meshes will leak in editor (but adding a DestroyImmediate will break Undo...)
+ *	- easier way to enable/disable handedness swapping
+ *	- handle multiple selected meshes (by merging to a single mesh w/ transforms applied)
+ *	- support importing materials, bone weights, uvs
+ *	- keep submeshes imported as quads in quad topology
  */
 
 namespace Parabox.OD
@@ -17,8 +18,16 @@ namespace Parabox.OD
 	/**
 	 * OD file import & export.
 	 */
-	public static class ODImportExport
+	public static class ODCopyPaste
 	{
+		// When copying a mesh from Unity, should the mesh handedness be converted to right handed?
+		public const string ConvertToRightHandedOnCopy = "od_ConvertToRightHandedOnCopy";
+		// When pasting a mesh into Unity, should the mesh be converted from right handed coordinates to left?
+		public const string ConvertToLeftHandedOnPaste = "od_ConvertToLeftHandedOnPaste";
+		// When pasting a mesh into Unity, should the mesh edges be split and normals recalculated?
+		public const string SplitVerticesOnPaste = "od_SplitVerticesOnPaste";
+
+
 		// Swap handed-ness on import/export?
 		private static bool ConvertHandedness
 		{

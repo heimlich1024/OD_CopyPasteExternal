@@ -8,7 +8,7 @@ namespace Parabox.OD
 	/**
 	 * Editor functionality for copy / paste from external.
 	 */
-	internal static class CopyPasteExternal
+	internal static class ODCopyPasteMenuItems
 	{
 		private static Material DefaultMaterial()
 		{
@@ -21,7 +21,7 @@ namespace Parabox.OD
 		[MenuItem("Edit/Paste Mesh from External %#v")]
 		private static void Import()
 		{
-			Mesh m = ODImportExport.Import(ODImportExport.GetTempFile());
+			Mesh m = ODCopyPaste.Import(ODCopyPaste.GetTempFile());
 
 			GameObject go = new GameObject();
 			go.AddComponent<MeshFilter>().sharedMesh = m;
@@ -34,7 +34,7 @@ namespace Parabox.OD
 			GameObject first = Selection.gameObjects.FirstOrDefault(x => x.GetComponent<MeshFilter>() != null);
 
 			if(first != null)
-				ODImportExport.Export(
+				ODCopyPaste.Export(
 					first.GetComponent<MeshFilter>().sharedMesh,
 					first.GetComponent<MeshRenderer>().sharedMaterials);
 		}
