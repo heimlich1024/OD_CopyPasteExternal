@@ -10,9 +10,11 @@ namespace Parabox.OD
 	public class Polygon
 	{
 		public int[] indices;
+		public string material;
 
-		public Polygon(params int[] indices)
+		public Polygon(string material, params int[] indices)
 		{
+			this.material = material;
 			this.indices = indices;
 		}
 

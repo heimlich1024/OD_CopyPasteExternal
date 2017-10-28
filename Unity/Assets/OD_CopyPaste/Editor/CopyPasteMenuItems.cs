@@ -21,11 +21,24 @@ namespace Parabox.OD
 		[MenuItem("Edit/Paste Mesh from External %#v")]
 		private static void Import()
 		{
-			Mesh m = CopyPaste.Import(CopyPaste.GetTempFile());
+			Mesh mesh;
+			string[] materials;
 
-			GameObject go = new GameObject();
-			go.AddComponent<MeshFilter>().sharedMesh = m;
-			go.AddComponent<MeshRenderer>().sharedMaterial = DefaultMaterial();
+			if (CopyPaste.Import(CopyPaste.GetTempFile(), out mesh, out materials))
+			{
+				GameObject go = new GameObject();
+				go.AddComponent<MeshFilter>().sharedMesh = mesh;
+				Material[] mats = new Material[materials.Length];
+				Material[] all = (Material[]) Resources.FindObjectsOfTypeAll(typeof(Material));
+				for(int i = 0, mc = mats.Length; i < mc; i++)
+					mats[i] = all.FirstOrDefault(x => x.name.Equals(materials[i])) ?? DefaultMaterial();
+
+				go.AddComponent<MeshRenderer>().sharedMaterials = mats;
+			}
+			else
+			{
+				Object.DestroyImmediate(mesh);
+			}
 		}
 
 		[MenuItem("Edit/Copy Mesh To External %#c")]

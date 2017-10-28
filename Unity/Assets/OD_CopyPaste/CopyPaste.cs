@@ -93,7 +93,7 @@ namespace Parabox.OD
 		/**
 		 *	Import from ODVertexData file.
 		 */
-		public static Mesh Import(string path)
+		public static bool Import(string path, out Mesh mesh, out string[] materials)
 		{
 			MeshAttribute attrib = MeshAttribute.Null;
 			List<Vector3> positions = new List<Vector3>();
@@ -121,16 +121,16 @@ namespace Parabox.OD
 				}
 			}
 
-			Mesh m = new Mesh();
-			m.name = "ODCopyPaste_Mesh";
+			mesh = new Mesh();
+			mesh.name = "ODCopyPaste_Mesh";
 
 			bool hasNormals = normals.Count == positions.Count;
-			bool hasUvs = uvs.Count > 0;
 
 			if(PasteConvertsHandedness)
 			{
 				for(int i = 0; i < positions.Count; i++)
 				{
+					// todo More options for swapping coordinate systems around (eg, max w/ z up)
 					positions[i] = new Vector3(-positions[i].x, positions[i].y, positions[i].z);
 
 					if(hasNormals)
@@ -142,21 +142,25 @@ namespace Parabox.OD
 			// recalculate hard edges.
 			if (SplitVertices || !hasNormals)
 			{
-				MeshUtility.GeneratePerTriangleMesh(positions, uvs, polygons, ref m);
-				m.RecalculateNormals();
+				MeshUtility.GeneratePerTriangleMesh(positions, uvs, polygons, ref mesh);
+				mesh.RecalculateNormals();
 			}
 			else
 			{
-				m.vertices = positions.ToArray();
+				mesh.vertices = positions.ToArray();
 				int[] triangles = polygons.SelectMany(x => x.GetTriangles()).ToArray();
-				m.triangles = triangles;
-				m.normals = normals.ToArray();
+				mesh.triangles = triangles;
+				mesh.normals = normals.ToArray();
 			}
 
-			m.RecalculateTangents();
-			m.RecalculateBounds();
+			mesh.RecalculateTangents();
+			mesh.RecalculateBounds();
+			materials = new string[]
+			{
+				polygons.First().material
+			};
 
-			return m;
+			return true;
 		}
 
 		// Copy mesh
@@ -289,8 +293,6 @@ namespace Parabox.OD
 				if (all.Length == 5 && all[1].StartsWith("PLY"))
 					int.TryParse(all[2], out plyIndex);
 
-				var uv = new UVCoord() { position = pos, polygonIndex = plyIndex, vertexIndex = pntIndex };
-
 				uvs.Add(new UVCoord() { position = pos, polygonIndex = plyIndex, vertexIndex = pntIndex });
 
 				return true;
@@ -330,7 +332,7 @@ namespace Parabox.OD
 				// (which can be FACE, SubD, or CCSS)
 				// 0,1,2,3;;Default;;FACE
 				//
-				// For now Unity paste only supports PolyType Face
+				// For now paste only supports PolyType Face
 				string[] split = line.Split(POLYGON_SEPARATOR, StringSplitOptions.RemoveEmptyEntries);
 
 				if(split[2].Equals("FACE"))
@@ -341,7 +343,7 @@ namespace Parabox.OD
 					for(int i = 0; i < face.Length; i++)
 						int.TryParse(face[i], out indices[i]);
 
-					polygons.Add(new Polygon(indices));
+					polygons.Add(new Polygon(split[1], indices));
 				}
 			}
 			catch(Exception e)

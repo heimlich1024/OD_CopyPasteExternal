@@ -35,7 +35,8 @@ namespace Parabox.OD
 			List<int> triangles = new List<int>();
 			List<Vector2> uvs = new List<Vector2>();
 			bool uvsValid = uvCoords.Count > 0;
-			bool uvsIndexedByPolygon = uvsValid && uvCoords.First().polygonIndex > -1;
+			// uvs can be a mix of per-poly and continuous uvs
+			bool uvsIndexedByPolygon = uvsValid && uvCoords.Any(x => x.polygonIndex > -1);
 
 			if (uvsIndexedByPolygon)
 			{
@@ -65,14 +66,18 @@ namespace Parabox.OD
 
 					triangles.AddRange(indices);
 
-					try
+					Dictionary<int, Vector2> fallback = polygonUvLookup.ContainsKey(-1) ? polygonUvLookup[-1] : null;
+
+					for (int n = 0, ic = indices.Length; uvsValid && n < ic; n++)
 					{
-						for (int n = 0, ic = indices.Length; uvsValid && n < ic; n++)
-							uvs.Add(polygonUvLookup[ply][indices[n]]);
-					}
-					catch
-					{
-						uvsValid = false;
+						Dictionary<int, Vector2> polyUvs;
+						Vector2 v;
+
+						if( (polygonUvLookup.TryGetValue(ply, out polyUvs) && polyUvs.TryGetValue(indices[n], out v)) ||
+							(fallback != null && fallback.TryGetValue(indices[n], out v)) )
+							uvs.Add(v);
+						else
+							uvsValid = false;
 					}
 				}
 			}
