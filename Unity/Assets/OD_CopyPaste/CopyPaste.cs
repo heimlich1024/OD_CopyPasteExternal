@@ -291,8 +291,6 @@ namespace Parabox.OD
 
 				var uv = new UVCoord() { position = pos, polygonIndex = plyIndex, vertexIndex = pntIndex };
 
-				Debug.Log(uv.ToString());
-
 				uvs.Add(new UVCoord() { position = pos, polygonIndex = plyIndex, vertexIndex = pntIndex });
 
 				return true;

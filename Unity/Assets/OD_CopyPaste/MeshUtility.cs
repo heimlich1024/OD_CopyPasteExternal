@@ -41,15 +41,22 @@ namespace Parabox.OD
 			{
 				var polygonUvLookup = new Dictionary<int, Dictionary<int, Vector2>>();
 
-				for (int i = 0, uc = uvCoords.Count; i < uc; i++)
+				try
 				{
-					Dictionary<int, Vector2> tri = null;
+					for (int i = 0, uc = uvCoords.Count; i < uc; i++)
+					{
+						Dictionary<int, Vector2> tri = null;
 
-					if (polygonUvLookup.TryGetValue(uvCoords[i].polygonIndex, out tri))
-						tri.Add(uvCoords[i].vertexIndex, uvCoords[i].position);
-					else
-						polygonUvLookup.Add(uvCoords[i].polygonIndex,
-							new Dictionary<int, Vector2>() {{uvCoords[i].vertexIndex, uvCoords[i].position}});
+						if (polygonUvLookup.TryGetValue(uvCoords[i].polygonIndex, out tri))
+							tri.Add(uvCoords[i].vertexIndex, uvCoords[i].position);
+						else
+							polygonUvLookup.Add(uvCoords[i].polygonIndex,
+								new Dictionary<int, Vector2>() {{uvCoords[i].vertexIndex, uvCoords[i].position}});
+					}
+				}
+				catch
+				{
+					uvsValid = false;
 				}
 
 				for (int ply = 0, tc = polygons.Count; ply < tc; ply++)
@@ -73,19 +80,29 @@ namespace Parabox.OD
 			{
 				Dictionary<int, Vector2> uvLookup = new Dictionary<int, Vector2>();
 
-				for(int i = 0, uc = uvCoords.Count; i < uc; i++)
-					uvLookup.Add(uvCoords[i].vertexIndex, uvCoords[i].position);
+				try
+				{
+					for (int i = 0, uc = uvCoords.Count; i < uc; i++)
+						uvLookup.Add(uvCoords[i].vertexIndex, uvCoords[i].position);
+				}
+				catch
+				{
+					uvsValid = false;
+				}
 
 				for (int i = 0, tc = polygons.Count; i < tc; i++)
 				{
 					int[] indices = TriangulatePolygon(polygons[i].indices);
 					triangles.AddRange(indices);
 
-					Vector2 v;
+					if (uvsValid)
+					{
+						Vector2 v;
 
-					foreach(int tri in indices)
-						if(uvLookup.TryGetValue(tri, out v))
-							uvs.Add(v);
+						foreach (int tri in indices)
+							if (uvLookup.TryGetValue(tri, out v))
+								uvs.Add(v);
+					}
 				}
 
 				uvsValid = uvs.Count == triangles.Count;
