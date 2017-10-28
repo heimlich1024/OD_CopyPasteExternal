@@ -28,12 +28,19 @@ namespace Parabox.OD
 			{
 				GameObject go = new GameObject();
 				go.AddComponent<MeshFilter>().sharedMesh = mesh;
-				Material[] mats = new Material[materials.Length];
-				Material[] all = (Material[]) Resources.FindObjectsOfTypeAll(typeof(Material));
-				for(int i = 0, mc = mats.Length; i < mc; i++)
-					mats[i] = all.FirstOrDefault(x => x.name.Equals(materials[i])) ?? DefaultMaterial();
 
-				go.AddComponent<MeshRenderer>().sharedMaterials = mats;
+				if (materials.Length > 0)
+				{
+					Material[] mats = new Material[materials.Length];
+					Material[] all = (Material[]) Resources.FindObjectsOfTypeAll(typeof(Material));
+					for (int i = 0, mc = mats.Length; i < mc; i++)
+						mats[i] = all.FirstOrDefault(x => x.name.Equals(materials[i])) ?? DefaultMaterial();
+					go.AddComponent<MeshRenderer>().sharedMaterials = mats;
+				}
+				else
+				{
+					go.AddComponent<MeshRenderer>().sharedMaterial = DefaultMaterial();
+				}
 			}
 			else
 			{

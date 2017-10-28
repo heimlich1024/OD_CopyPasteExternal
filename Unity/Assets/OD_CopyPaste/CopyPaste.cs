@@ -121,9 +121,6 @@ namespace Parabox.OD
 				}
 			}
 
-			mesh = new Mesh();
-			mesh.name = "ODCopyPaste_Mesh";
-
 			bool hasNormals = normals.Count == positions.Count;
 
 			if(PasteConvertsHandedness)
@@ -138,27 +135,25 @@ namespace Parabox.OD
 				}
 			}
 
-			// If normals aren't present then this mesh is probably sharing vertex positions, so split them up and
-			// recalculate hard edges.
-			if (SplitVertices || !hasNormals)
-			{
-				MeshUtility.GeneratePerTriangleMesh(positions, uvs, polygons, ref mesh);
-				mesh.RecalculateNormals();
-			}
-			else
-			{
-				mesh.vertices = positions.ToArray();
-				int[] triangles = polygons.SelectMany(x => x.GetTriangles()).ToArray();
-				mesh.triangles = triangles;
-				mesh.normals = normals.ToArray();
-			}
+			materials = new string[0];
+			mesh = null;
 
+			List<Vertex> vertices;
+			Dictionary<string, List<int>> indices;
+			if (!MeshUtility.GeneratePerTriangleVertices(positions,
+				normals,
+				uvs,
+				polygons,
+				out vertices,
+				out indices))
+				return false;
+
+			materials = indices.Select(x => x.Key).ToArray();
+			mesh = MeshUtility.CompileMesh(vertices, indices);
+			mesh.name = "ODCopyPaste_Mesh";
+			mesh.RecalculateNormals();
 			mesh.RecalculateTangents();
 			mesh.RecalculateBounds();
-			materials = new string[]
-			{
-				polygons.First().material
-			};
 
 			return true;
 		}

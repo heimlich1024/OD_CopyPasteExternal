@@ -27,111 +27,98 @@ namespace Parabox.OD
 			return triangles;
 		}
 
-		public static void GeneratePerTriangleMesh(List<Vector3> positions,
+		public static bool GeneratePerTriangleVertices(List<Vector3> positions,
+			List<Vector3> normals,
 			List<UVCoord> uvCoords,
 			List<Polygon> polygons,
-			ref Mesh mesh)
+			out List<Vertex> vertices,
+			out Dictionary<string, List<int>> indices)
 		{
-			List<int> triangles = new List<int>();
-			List<Vector2> uvs = new List<Vector2>();
+			vertices = new List<Vertex>();
+			indices = new Dictionary<string, List<int>>();
+
+			var submeshes = new Dictionary<string, List<int>>();
 			bool uvsValid = uvCoords.Count > 0;
 			// uvs can be a mix of per-poly and continuous uvs
 			bool uvsIndexedByPolygon = uvsValid && uvCoords.Any(x => x.polygonIndex > -1);
+			int index = 0;
 
 			if (uvsIndexedByPolygon)
 			{
 				var polygonUvLookup = new Dictionary<int, Dictionary<int, Vector2>>();
 
-				try
+				for (int i = 0, uc = uvCoords.Count; i < uc; i++)
 				{
-					for (int i = 0, uc = uvCoords.Count; i < uc; i++)
-					{
-						Dictionary<int, Vector2> tri = null;
+					Dictionary<int, Vector2> tri = null;
 
-						if (polygonUvLookup.TryGetValue(uvCoords[i].polygonIndex, out tri))
-							tri.Add(uvCoords[i].vertexIndex, uvCoords[i].position);
-						else
-							polygonUvLookup.Add(uvCoords[i].polygonIndex,
-								new Dictionary<int, Vector2>() {{uvCoords[i].vertexIndex, uvCoords[i].position}});
-					}
+					if (polygonUvLookup.TryGetValue(uvCoords[i].polygonIndex, out tri))
+						tri.Add(uvCoords[i].vertexIndex, uvCoords[i].position);
+					else
+						polygonUvLookup.Add(uvCoords[i].polygonIndex,
+							new Dictionary<int, Vector2>() {{uvCoords[i].vertexIndex, uvCoords[i].position}});
 				}
-				catch
-				{
-					uvsValid = false;
-				}
+
+				Dictionary<int, Vector2> fallback = polygonUvLookup.ContainsKey(-1) ? polygonUvLookup[-1] : null;
 
 				for (int ply = 0, tc = polygons.Count; ply < tc; ply++)
 				{
-					int[] indices = TriangulatePolygon(polygons[ply]);
+					int[] polyIndices = TriangulatePolygon(polygons[ply]);
 
-					triangles.AddRange(indices);
+					List<int> submeshIndices;
 
-					Dictionary<int, Vector2> fallback = polygonUvLookup.ContainsKey(-1) ? polygonUvLookup[-1] : null;
+					if(!indices.TryGetValue(polygons[ply].material, out submeshIndices))
+						indices.Add(polygons[ply].material, submeshIndices = new List<int>());
 
-					for (int n = 0, ic = indices.Length; uvsValid && n < ic; n++)
+					for (int n = 0, ic = polyIndices.Length; n < ic; n++)
 					{
 						Dictionary<int, Vector2> polyUvs;
 						Vector2 v;
 
-						if( (polygonUvLookup.TryGetValue(ply, out polyUvs) && polyUvs.TryGetValue(indices[n], out v)) ||
-							(fallback != null && fallback.TryGetValue(indices[n], out v)) )
-							uvs.Add(v);
+						int vi = polyIndices[n];
+						submeshIndices.Add(index++);
+
+						if ((polygonUvLookup.TryGetValue(ply, out polyUvs) && polyUvs.TryGetValue(polyIndices[n], out v)) ||
+						    (fallback != null && fallback.TryGetValue(polyIndices[n], out v)))
+						{
+							vertices.Add(new Vertex()
+							{
+								position = positions[vi],
+								normal = vi < normals.Count ? normals[vi] : Vector3.zero,
+								uv = v
+							});
+						}
 						else
-							uvsValid = false;
+						{
+							vertices.Add(new Vertex()
+							{
+								position = positions[polyIndices[n]],
+								normal = vi < normals.Count ? normals[vi] : Vector3.zero
+							});
+						}
 					}
 				}
 			}
-			else
-			{
-				Dictionary<int, Vector2> uvLookup = new Dictionary<int, Vector2>();
 
-				try
-				{
-					for (int i = 0, uc = uvCoords.Count; i < uc; i++)
-						uvLookup.Add(uvCoords[i].vertexIndex, uvCoords[i].position);
-				}
-				catch
-				{
-					uvsValid = false;
-				}
+			return true;
+		}
 
-				for (int i = 0, tc = polygons.Count; i < tc; i++)
-				{
-					int[] indices = TriangulatePolygon(polygons[i].indices);
-					triangles.AddRange(indices);
+		public static Mesh CompileMesh(List<Vertex> vertices, Dictionary<string, List<int>> indices)
+		{
+			Debug.Log("vertices: " + vertices.Count);
+			List<Vector3> positions = vertices.Select(x => x.position).ToList();
+			List<Vector3> normals = vertices.Select(x => x.normal).ToList();
+			List<Vector2> uvs = vertices.Select(x => x.uv).ToList();
 
-					if (uvsValid)
-					{
-						Vector2 v;
+			Mesh m = new Mesh();
+			m.SetVertices(positions);
+			m.SetNormals(normals);
+			m.SetUVs(0, uvs);
+			m.subMeshCount = indices.Count;
+			int index = 0;
+			foreach(var kvp in indices)
+				m.SetIndices(kvp.Value.ToArray(), MeshTopology.Triangles, index++);
 
-						foreach (int tri in indices)
-							if (uvLookup.TryGetValue(tri, out v))
-								uvs.Add(v);
-					}
-				}
-
-				uvsValid = uvs.Count == triangles.Count;
-			}
-
-			int triangleCount = triangles.Count;
-
-			Vector3[] splitVertices = new Vector3[triangleCount];
-			int[] splitTriangles = new int[triangleCount];
-
-			for (int i = 0; i < triangleCount; i++)
-			{
-				splitVertices[i] = positions[triangles[i]];
-				splitTriangles[i] = i;
-			}
-
-			if(mesh == null)
-				mesh = new Mesh();
-			else
-				mesh.Clear();
-
-			mesh.vertices = splitVertices;
-			mesh.uv = uvsValid ? uvs.ToArray() : null;
-			mesh.triangles = splitTriangles;
+			return m;
 		}
 	}
 }
