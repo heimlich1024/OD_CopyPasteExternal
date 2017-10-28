@@ -5,7 +5,7 @@ using UnityEditor;
 
 namespace Parabox.OD
 {
-	public class ODCopyPastePreferences
+	public class CopyPastePreferences
 	{
 		private static bool m_Initialized = false;
 		private static bool m_ConvertToRightHandedOnCopy;
@@ -14,9 +14,9 @@ namespace Parabox.OD
 
 		private static void InitializePreferences()
 		{
-			m_ConvertToRightHandedOnCopy = EditorPrefs.GetBool(ODCopyPaste.ConvertToRightHandedOnCopy, false);
-			m_ConvertToLeftHandedOnPaste = EditorPrefs.GetBool(ODCopyPaste.ConvertToLeftHandedOnPaste, false);
-			m_SplitVerticesOnPaste = EditorPrefs.GetBool(ODCopyPaste.SplitVerticesOnPaste, true);
+			m_ConvertToRightHandedOnCopy = EditorPrefs.GetBool(CopyPaste.ConvertHandednessOnCopy, false);
+			m_ConvertToLeftHandedOnPaste = EditorPrefs.GetBool(CopyPaste.ConvertHandednessOnPaste, false);
+			m_SplitVerticesOnPaste = EditorPrefs.GetBool(CopyPaste.SplitVerticesOnPaste, true);
 			m_Initialized = true;
 		}
 
@@ -36,9 +36,9 @@ namespace Parabox.OD
 
 			if(EditorGUI.EndChangeCheck())
 			{
-				EditorPrefs.SetBool(ODCopyPaste.ConvertToRightHandedOnCopy, m_ConvertToRightHandedOnCopy);
-				EditorPrefs.SetBool(ODCopyPaste.ConvertToLeftHandedOnPaste, m_ConvertToLeftHandedOnPaste);
-				EditorPrefs.SetBool(ODCopyPaste.SplitVerticesOnPaste, m_SplitVerticesOnPaste);
+				EditorPrefs.SetBool(CopyPaste.ConvertHandednessOnCopy, m_ConvertToRightHandedOnCopy);
+				EditorPrefs.SetBool(CopyPaste.ConvertHandednessOnPaste, m_ConvertToLeftHandedOnPaste);
+				EditorPrefs.SetBool(CopyPaste.SplitVerticesOnPaste, m_SplitVerticesOnPaste);
 			}
 		}
 	}
