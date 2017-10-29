@@ -12,7 +12,6 @@ using UnityEditor;
  * todo
  *	- deleting pasted meshes will leak in editor (but adding a DestroyImmediate will break Undo...)
  *	- handle multiple selected meshes (by merging to a single mesh w/ transforms applied)?
- *	- support importing materials, bone weights, uvs
  */
 
 namespace Parabox.OD
@@ -68,9 +67,6 @@ namespace Parabox.OD
 			}
 		}
 
-		/**
-		 * todo documentation
-		 */
 		private enum MeshAttribute
 		{
 			Position,
@@ -82,17 +78,22 @@ namespace Parabox.OD
 			Null
 		}
 
-		/**
-		 *	Get path to the OD Vertex Data temp file.
-		 */
+		/// <summary>
+		/// Get path to the temp mesh file.
+		/// </summary>
+		/// <returns>Path to the ODVertexData txt file.</returns>
 		public static string GetTempFile()
 		{
 			return string.Format("{0}ODVertexData.txt", Path.GetTempPath());
 		}
 
-		/**
-		 *	Import from ODVertexData file.
-		 */
+		/// <summary>
+		/// Import from ODVertexData file.
+		/// </summary>
+		/// <param name="path"></param>
+		/// <param name="mesh"></param>
+		/// <param name="materials"></param>
+		/// <returns></returns>
 		public static bool Import(string path, out Mesh mesh, out string[] materials)
 		{
 			MeshAttribute attrib = MeshAttribute.Null;
@@ -181,6 +182,7 @@ namespace Parabox.OD
 			{
 				Vector3[] positions = m.vertices;
 				Vector3[] normals = m.normals;
+				Vector2[] uvs = m.uv;
 
 				sw.WriteLine(string.Format("VERTICES:{0}", m.vertexCount));
 
@@ -193,6 +195,14 @@ namespace Parabox.OD
 
 					foreach(Vector3 n in normals)
 						sw.WriteLine(string.Format("{0} {1} {2}", CopyConvertsHandedness ? -n.x : n.x, n.y, n.z));
+				}
+
+				if (uvs != null && uvs.Length == m.vertexCount)
+				{
+					sw.WriteLine(string.Format("UV:UVMap:{0}", m.vertexCount));
+
+					for(int i = 0, vc = m.vertexCount; i < vc; i++)
+						sw.WriteLine(string.Format("{0} {1}:PNT:{2}", uvs[i].x, uvs[i].y, i));
 				}
 
 				for (int i = 0; i < m.subMeshCount; i++)
