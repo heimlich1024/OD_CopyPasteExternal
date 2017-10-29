@@ -149,7 +149,7 @@ namespace Parabox.OD
 				return false;
 
 			materials = indices.Select(x => x.Key).ToArray();
-			mesh = MeshUtility.CompileMesh(vertices, indices);
+			mesh = MeshUtility.CompileMesh(vertices, indices, !SplitVertices);
 			mesh.name = "ODCopyPaste_Mesh";
 			mesh.RecalculateNormals();
 			mesh.RecalculateTangents();

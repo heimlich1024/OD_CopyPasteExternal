@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace Parabox.OD
 {
+	/// <summary>
+	/// Methods for creating meshes from polygon soup.
+	/// </summary>
 	public static class MeshUtility
 	{
 		public static int[] TriangulatePolygon(Polygon poly)
@@ -102,22 +105,60 @@ namespace Parabox.OD
 			return true;
 		}
 
-		public static Mesh CompileMesh(List<Vertex> vertices, Dictionary<string, List<int>> indices)
+		/// <summary>
+		/// Compile a mesh from a set of vertices and submesh indices.
+		/// </summary>
+		/// <param name="vertices"></param>
+		/// <param name="indices"></param>
+		/// <param name="optimize">If enabled common vertices will be collapsed to a single index. Disable to keep edges faceted</param>
+		/// <returns></returns>
+		public static Mesh CompileMesh(List<Vertex> vertices, Dictionary<string, List<int>> indices, bool optimize = true)
 		{
-			List<Vector3> positions = vertices.Select(x => x.position).ToList();
-			List<Vector3> normals = vertices.Select(x => x.normal).ToList();
-			List<Vector2> uvs = vertices.Select(x => x.uv).ToList();
+			var positions = optimize ? new List<Vector3>() : vertices.Select(x => x.position).ToList();
+			var normals = optimize ? new List<Vector3>() : vertices.Select(x => x.normal).ToList();
+			var uvs = optimize ? new List<Vector2>() : vertices.Select(x => x.uv).ToList();
 
-			// todo detect common vertices and share indices when compiling
+			if (optimize)
+			{
+				int index = 0;
+
+				// collapse shared vertices
+				foreach (var kvp in indices)
+				{
+					List<int> submesh = kvp.Value;
+					Dictionary<Vertex, int> commonVertices = new Dictionary<Vertex, int>();
+
+					for (int i = 0, vc = submesh.Count; i < vc; i++)
+					{
+						Vertex v = vertices[submesh[i]];
+						int ind = -1;
+
+						if (commonVertices.TryGetValue(v, out ind))
+						{
+							submesh[i] = ind;
+						}
+						else
+						{
+							submesh[i] = index;
+							commonVertices.Add(v, index);
+							index++;
+						}
+					}
+
+					positions.AddRange(commonVertices.Select(x => x.Key.position));
+					normals.AddRange(commonVertices.Select(x => x.Key.normal));
+					uvs.AddRange(commonVertices.Select(x => x.Key.uv));
+				}
+			}
 
 			Mesh m = new Mesh();
 			m.SetVertices(positions);
 			m.SetNormals(normals);
 			m.SetUVs(0, uvs);
 			m.subMeshCount = indices.Count;
-			int index = 0;
+			int smi = 0;
 			foreach(var kvp in indices)
-				m.SetIndices(kvp.Value.ToArray(), MeshTopology.Triangles, index++);
+				m.SetIndices(kvp.Value.ToArray(), MeshTopology.Triangles, smi++);
 
 			return m;
 		}
