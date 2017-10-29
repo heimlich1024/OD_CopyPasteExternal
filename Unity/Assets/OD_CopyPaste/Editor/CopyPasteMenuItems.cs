@@ -27,14 +27,22 @@ namespace Parabox.OD
 			if (CopyPaste.Import(CopyPaste.GetTempFile(), out mesh, out materials))
 			{
 				GameObject go = new GameObject();
+				go.name = "OD Mesh";
+				Undo.RegisterCreatedObjectUndo(go, "Pase External Mesh");
+
 				go.AddComponent<MeshFilter>().sharedMesh = mesh;
 
 				if (materials.Length > 0)
 				{
 					Material[] mats = new Material[materials.Length];
-					Material[] all = (Material[]) Resources.FindObjectsOfTypeAll(typeof(Material));
+					string[] all = System.IO.Directory.GetFiles("Assets", "*.mat", SearchOption.AllDirectories);
 					for (int i = 0, mc = mats.Length; i < mc; i++)
-						mats[i] = all.FirstOrDefault(x => x.name.Equals(materials[i])) ?? DefaultMaterial();
+					{
+						string match = all.FirstOrDefault(x => Path.GetFileNameWithoutExtension(x).Equals(materials[i]));
+						Material mat = AssetDatabase.LoadAssetAtPath<Material>(match);
+						mats[i] = mat ?? DefaultMaterial();
+
+					}
 					go.AddComponent<MeshRenderer>().sharedMaterials = mats;
 				}
 				else

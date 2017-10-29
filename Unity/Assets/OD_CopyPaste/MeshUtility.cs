@@ -104,10 +104,11 @@ namespace Parabox.OD
 
 		public static Mesh CompileMesh(List<Vertex> vertices, Dictionary<string, List<int>> indices)
 		{
-			Debug.Log("vertices: " + vertices.Count);
 			List<Vector3> positions = vertices.Select(x => x.position).ToList();
 			List<Vector3> normals = vertices.Select(x => x.normal).ToList();
 			List<Vector2> uvs = vertices.Select(x => x.uv).ToList();
+
+			// todo detect common vertices and share indices when compiling
 
 			Mesh m = new Mesh();
 			m.SetVertices(positions);
