@@ -99,3 +99,7 @@ Unity/obj
 Unity/*.sln
 Unity/*.csproj
 Unity/.idea
+
+Unity/Assets/UVee/
+
+Unity/Assets/UVee\.meta
