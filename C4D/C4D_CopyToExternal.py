@@ -77,7 +77,7 @@ def main():
 
     obj = os.path.dirname(os.path.realpath(__file__)) + os.sep + "1.obj"
 
-    if documents.SaveDocument(docTemp, obj, c4d.SAVEDOCUMENTFLAGS_0, c4d.FORMAT_OBJEXPORT):
+    if documents.SaveDocument(docTemp, obj, c4d.SAVEDOCUMENTFLAGS_DONTADDTORECENTLIST, 1030178):
       objToVertData(obj)
 
 if __name__=='__main__':
