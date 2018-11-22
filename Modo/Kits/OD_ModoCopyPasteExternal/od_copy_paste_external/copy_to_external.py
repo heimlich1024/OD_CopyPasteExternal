@@ -136,39 +136,35 @@ def execute():
                     )
 
             # vertex Normal
-            vertex_normal_maps = mesh.geometry.vmaps.getMapsByType(
-                lx.symbol.i_VMAP_NORMAL
+            vertexnormals = []
+            for p in range(len(geo.polygons)):
+                for index, vert in enumerate(geo.polygons[p].vertices):
+                    vertexnormals.append(
+                        [geo.polygons[p].vertexNormal(index), p, vert.index]
+                    )
+            f.write(
+                "VERTEXNORMALS:"
+                + str('VertexNormals')
+                + ":"
+                + str(len(vertexnormals))
+                + "\n"
             )
-            for vertex_normal_map in vertex_normal_maps:
-                vertexnormals = []
-                for p in range(len(geo.polygons)):
-                    for index, vert in enumerate(geo.polygons[p].vertices):
-                        vertexnormals.append(
-                            [geo.polygons[p].vertexNormal(index), p, vert.index]
-                        )
+            for normal in vertexnormals:
                 f.write(
-                    "VERTEXNORMALS:"
-                    + str(vertex_normal_map.name)
-                    + ":"
-                    + str(len(vertexnormals))
+                    str(normal[0][0])
+                    + " "
+                    + str(normal[0][1])
+                    + " "
+                    + str(normal[0][2])
+                    + ":PLY:"
+                    + str(normal[1])
+                    + ":PNT:"
+                    + str(normal[2])
                     + "\n"
                 )
-                for normal in vertexnormals:
-                    f.write(
-                        str(normal[0][0])
-                        + " "
-                        + str(normal[0][1])
-                        + " "
-                        + str(normal[0][2])
-                        + ":PLY:"
-                        + str(normal[1])
-                        + ":PNT:"
-                        + str(normal[2])
-                        + "\n"
-                    )
 
-            # close File
-            f.close()
+        # close File
+        f.close()
     else:
         modo.dialogs.alert(
             "No Mesh Selected",
