@@ -1,5 +1,5 @@
 # OD_CopyPasteExternal
-Easily copying and pasting of geometry and common atributes across 3D Applications, perfect for quick iterations between them, without concerns about file management.              [Quick Download](https://github.com/heimlich1024/OD_CopyPasteExternal/archive/master.zip)
+Easily copying and pasting of geometry and common attributes across 3D Applications, perfect for quick iterations between them, without concerns about file management.              [Quick Download](https://github.com/heimlich1024/OD_CopyPasteExternal/archive/master.zip)
 
 # Why ?
 
