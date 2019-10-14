@@ -45,26 +45,29 @@ for verts in vertline:
         points.append(pt)
 
 #create Polygons
-surfList = []; pVertex = []
+surfList = []
+pVertex = []
+ppVertex = {}
 for polygons in polyline:
+    cnt = 0
     for i in xrange(polygons[1] + 1, polygons[1] + polygons[0] + 1):
         pts = []
         surf = (lines[i].split(";;")[1]).strip()
         surf = re.sub(r"[^a-zA-Z0-9]", lambda m: "_{:02x}".format(ord(m.group())), surf)
         polytype = (lines[i].split(";;")[2]).strip()
         for x in (lines[i].split(";;")[0]).strip().split(","):
-
             pts.append(int(x.strip()))
         pts.insert(len(pts), pts[0])
         pts.pop(0)
-        pts = reversed(pts)
+        pts = pts[::-1]
         poly = geo.createPolygon()#makes the Poly
         for p in pts:
-            pVertex.append(poly.addVertex(points[p]))#adds vertex to position Poly
+            ppVertex[str(cnt) + "," + str(p)] = poly.addVertex(points[p])
         if surf not in surfList:
             attrGroup = geo.addAttrib(hou.attribType.Prim, surf, 0)#Creates surface attributes
             surfList.append(surf)
         poly.setAttribValue(surf, (1))#gives it the surface name
+        cnt += 1
 
 #Create Weights
 for weightMap in weightMaps:
@@ -76,18 +79,18 @@ for weightMap in weightMaps:
             point.setAttribValue(weightMap[0], float(lines[weightMap[1]+1+count].strip()))#set point weight
         count += 1
 
-#create UVs
 for uvMap in uvMaps:
     attrUV = geo.addAttrib(hou.attribType.Vertex, "uv", (0.0, 0.0, 0.0))#Creates UV attributre
     count = 0
-    for i in range(int(uvMap[0][1])):
+    for i in range(int(uvMap[0][1])): 
         line = lines[uvMap[1]+1+count]
         split = line.split(":")
         if len(split) > 3: #check the format to see if it has a point and poly classifier, determining with that, whether the uv is discontinuous or continuous
-            pVertex[count].setAttribValue(attrUV, (float(split[0].split(" ")[0]), float(split[0].split(" ")[1]), 1.0))#Adds UV attribute info
-        else:
-            pVertex[count].setAttribValue(attrUV, (float(split[0].split(" ")[0]), float(split[0].split(" ")[1]), 1.0))#Adds UV attribute info
-        count +=1
+            ppVertex[split[2] + "," + split[4].strip("\\n")].setAttribValue(attrUV, (float(split[0].split(" ")[0]), float(split[0].split(" ")[1]), 1.0))#Adds UV attribute info
+        #else:
+            ppVertex[split[2] + "," + split[4].strip("\\n")].setAttribValue(attrUV, (float(split[0].split(" ")[0]), float(split[0].split(" ")[1]), 1.0))#Adds UV attribute info
+        count +=1 
+
 
 '''})
 
