@@ -178,7 +178,7 @@ class OD_OT_PasteFromExternal(bpy.types.Operator):
                     count +=1
                 bm.to_mesh(mesh)
 
-            bpy.context.scene.update()
+            bpy.context.view_layer.update()
 
             # return the object to the function caller for further stuff
             return obj
