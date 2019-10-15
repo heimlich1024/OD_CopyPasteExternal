@@ -65,7 +65,7 @@ Add them to the menus as you please.
 
 Just install the two scripts as any other plugin.
 
-### Blender Install (tested 2.78c)
+### Blender Install (tested 2.78c & 2.8x)
 
 Preferences/Addons/Install from File and select the files and click the checkbox.
 The plugins are then found under the object menu.
