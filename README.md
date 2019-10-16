@@ -38,7 +38,7 @@ The following applications are supported:
 * ZBrush : Vertices / Polygons / UVs
 * Substance Painter : Vertices / Polygons / UVs
 * 3D-Coat: Vertices / Polygons / UVs
-* Unity: Vertices/ Polygons / UVs / Materials
+* Unity: Vertices/ Polygons / UVs / Weights / Materials
 * Mari : Vertices / Polygons / UVs (in beta)
 * Others	: Looking for contributors to write implementations for other 3d Apps (see TODO)
 
@@ -70,7 +70,7 @@ Just install the two scripts as any other plugin.
 Preferences/Addons/Install from File and select the files and click the checkbox.
 The plugins are then found under the object menu.
 
-### Houdini Install (tested 15 and higher)
+### Houdini Install (tested 15 and higher - Apprentice/Indie/Fx License)
 
 Start Houdini and Right Click on an empty space in the shelf and select New Tool.
 Then go to the Scrips Tab and paste the contents of the python file there.  In the
@@ -88,12 +88,14 @@ Preliminary Paste script to be called from the Max Script Editor (see .py for in
 
 Copy the contents of the paste script into the Ruby Console Window in Sketchup
 
-### ZBrush
+### ZBrush (4.x / 2018.x / 2019.x)
 
 Copy the contents of the ZBrush folder in the download into the ZStartup/ZPlugs64 folder.
 So in the ZStartup/ZPlugs64 you should have the ODCopyPaste folder and also the zscript file.
 For x32 versions of windows, just drop the "64" from the folders above.
-For OSX versions, unzip the OSX Binaries into the same folder.
+For OSX versions, unzip the OSX Binaries into the same folder.Hi. 
+This doesn't show up on the plugin menu, You would find it under the tools menu.
+
 
 ### Substance Painter
 
@@ -112,7 +114,7 @@ files in there.
 In 3DCoat, under the scripts tab, select Run Script, and select the two .txt files contained
 here.  From that point on, they'll show up under the Script Menu and you can use them as is.
 
-### Maxon Cinema 4D
+### Maxon Cinema 4D (R17+)
 
 Copy the plugins into the scripts folder and they should show up under the python menu. You
 might have to manually run them the first time.  This current implementation is a holdover
@@ -195,6 +197,6 @@ alt="3DSMax-Blender Usage" width="240" height="180" border="10" /></a>
 * 3DsMax:   Initial Implementation as sample is complete
 * Sketchup: Add Copy To and finesse Paste implementation
 * Unreal:   R&D to see if its possible to implement
-* Unity:    R&D to see if its possible to implement
+* Unity:    Initial Implmenetaiton complete, see what else is possible
 * Mari:    R&D to see if its possible to implement
 * Nuke:    R&D to see if its possible to implement
