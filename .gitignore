@@ -103,3 +103,5 @@ Unity/.idea
 Unity/Assets/UVee/
 
 Unity/Assets/UVee\.meta
+# PyCharm Junk
+.idea/
