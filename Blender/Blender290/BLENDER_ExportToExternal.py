@@ -75,14 +75,14 @@ class OD_OT_CopyToExternal(bpy.types.Operator):
                         f.write(str(r[count]) + "\n")
                     count += 1
 
-            #write all morphs
-            for keys in bpy.data.shape_keys:
-                for key in keys.key_blocks[1:]:
-                    f.write("MORPH:" + key.name + "\n")
-                    basis_verts = keys.key_blocks[0].data
-                    for j, kv in enumerate(key.data):
-                        delta = kv.co - basis_verts[j].co
-                        f.write(str(delta[0]) + " " + str(delta[2]) + " " + str(delta[1]*-1) + "\n")
+            #write object morphs
+            keys = obj.data.shape_keys
+            for key in keys.key_blocks[1:]:
+                f.write("MORPH:" + key.name + "\n")
+                basis_verts = keys.key_blocks[0].data
+                for j, kv in enumerate(key.data):
+                    delta = kv.co - basis_verts[j].co
+                    f.write(str(delta[0]) + " " + str(delta[2]) + " " + str(delta[1]*-1) + "\n")
 
             #UVs
             for j, ul in enumerate(mesh.uv_layers):
