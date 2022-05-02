@@ -1,7 +1,7 @@
 selnode = hou.selectedNodes()
 
 if len(selnode) != 1:
-    print "You need to have a SOP Selected that you want to export."
+    print ("You need to have a SOP Selected that you want to export.")
 else:
     for node in hou.selectedNodes():
         selPath = node.path()
@@ -89,4 +89,4 @@ if len(geo.points()) > 0:
         hou.node('obj/'+sel+'/ExportScript/').destroy()
         hou.node('obj/'+sel+'/ODConvertToPolygon/').destroy()
     else:
-        print "Need to select at SOP Level"
+        print ("Need to select at SOP Level")
